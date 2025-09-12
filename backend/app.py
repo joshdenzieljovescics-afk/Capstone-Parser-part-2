@@ -20,20 +20,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# --- OpenAI setup (commented) ---
-load_dotenv(override=True)  # make sure dotenv is loaded
-openai_api_key = os.environ.get("OPENAI_API_KEY")
 
-if not openai_api_key:
-    print("⚠️ Could not find OPENAI_API_KEY in environment. Falling back to dotenv...")
-    from dotenv import dotenv_values
-    env_vars = dotenv_values(".env")
-    openai_api_key = env_vars.get("OPENAI_API_KEY")
-
-if not openai_api_key:
-    raise RuntimeError("❌ OPENAI_API_KEY environment variable is not set!")
-
-client = OpenAI(api_key=openai_api_key)
 
 
 # --- STEP 1: Extract text, tables, figures/images, fonts ---
