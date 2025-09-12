@@ -678,9 +678,9 @@ def test_anchoring():
         }
         
         # Save the anchored result
-        with open("anchored_output.json", "w") as f:
-            json.dump(result, f, indent=2)
-        print("[DEBUG] anchored_output.json created successfully")
+        # with open("anchored_output.json", "w") as f:
+        #     json.dump(result, f, indent=2)
+        # print("[DEBUG] anchored_output.json created successfully")
         
         print("\n[DEBUG] Anchored result (first chunk metadata):")
         if anchored_chunks:
