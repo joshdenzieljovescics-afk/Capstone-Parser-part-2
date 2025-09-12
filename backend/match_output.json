@@ -1,0 +1,301 @@
+{
+  "chunks": [
+    {
+      "metadata": {
+        "box": {
+          "b": 138.18478525500007,
+          "l": 105.46835375,
+          "r": 526.4996027899999,
+          "t": 120.18478525500007
+        },
+        "context": "Title and introductory information for the capstone project.",
+        "continues": false,
+        "is_page_break": false,
+        "page": 1,
+        "row_index": null,
+        "section": "Title Page",
+        "siblings": [],
+        "tags": ["university", "capstone", "title page"],
+        "type": "heading"
+      },
+      "text": "UNIVERSITY OF SANTO TOMAS\nCollege of Information and Computing Sciences\nDepartment of Information Technology\n1st Semester A/Y 2025-2026\nCapstone Project Title Validation Form"
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 245.0989229449999,
+          "l": 119.82932975,
+          "r": 425.87620661,
+          "t": 233.0989229449999
+        },
+        "context": "List of project proponents.",
+        "continues": false,
+        "is_page_break": false,
+        "page": 1,
+        "row_index": null,
+        "section": "Title Page",
+        "siblings": [],
+        "tags": ["proponents", "students"],
+        "type": "paragraph"
+      },
+      "text": "Proponents: Section: 4ITD 1. Carla, Carlos Miguel M.\n2. Chua, Paul Andrew T.\n3. Hilario, Lance Joshua J.\n4. Joves, Josh Denziel S.\n5. Sapit III, Amado M."
+    },
+    {
+      "metadata": {
+        "box": null,
+        "context": "Title of the capstone project.",
+        "continues": false,
+        "is_page_break": false,
+        "page": 1,
+        "row_index": null,
+        "section": "Title Page",
+        "siblings": [],
+        "tags": ["project title", "AI", "workflow"],
+        "type": "paragraph"
+      },
+      "text": "Project Title: SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics"
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 393.56092854499997,
+          "l": 72.108002,
+          "r": 513.06698636,
+          "t": 247.56651374
+        },
+        "context": "Coordinator and defense date information.",
+        "continues": false,
+        "is_page_break": false,
+        "page": 1,
+        "row_index": null,
+        "section": "Title Page",
+        "siblings": [],
+        "tags": ["coordinator", "defense date"],
+        "type": "paragraph"
+      },
+      "text": "Capstone Class Coordinator: Lintag, Leonid C.\nOral defense date: July 17, 2025"
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 422.248584065957,
+          "l": 72.108002,
+          "r": 392.96842211891607,
+          "t": 406.248583565957
+        },
+        "context": "Introduction to the scope and limitations of the project.",
+        "continues": false,
+        "is_page_break": false,
+        "page": 1,
+        "row_index": null,
+        "section": "Scope and Limitations",
+        "siblings": [],
+        "tags": ["scope", "limitations"],
+        "type": "heading"
+      },
+      "text": "Capstone Project Scope and Limitations:\nScope and Limitations\nScope"
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 595.26609947,
+          "l": 108.108002,
+          "r": 544.4908163599999,
+          "t": 426.4190792
+        },
+        "context": "Overview of the project's focus and components.",
+        "continues": true,
+        "is_page_break": false,
+        "page": 1,
+        "row_index": null,
+        "section": "Scope and Limitations",
+        "siblings": [],
+        "tags": ["project focus", "AI", "logistics"],
+        "type": "paragraph"
+      },
+      "text": "This capstone project focuses on the development of SafexpressOps, a web based logistics support platform powered by Agentic Artificial Intelligence, specifically tailored to enhance the operational workflows of Safexpress Logistics Inc. The core components and features included within the project scope are:"
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 620.6722706895215,
+          "l": 179.358002,
+          "r": 322.11594723054196,
+          "t": 610.6722709395215
+        },
+        "context": "Details about the AI-powered knowledge base feature.",
+        "continues": true,
+        "is_page_break": true,
+        "page": 1,
+        "row_index": null,
+        "section": "Scope and Limitations",
+        "siblings": [],
+        "tags": ["AI", "knowledge base"],
+        "type": "list"
+      },
+      "text": "AI Powered Knowledge Base\n- Consolidates manuals, company policies, warehouse-specific workflows, client requirements, and internal structures into a centralized database, accessible via a conversational AI assistant."
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 106.17226606452152,
+          "l": 216.108002,
+          "r": 544.140869730542,
+          "t": 96.1722663145215
+        },
+        "context": "Technical details of the AI knowledge base.",
+        "continues": false,
+        "is_page_break": false,
+        "page": 2,
+        "row_index": null,
+        "section": "Scope and Limitations",
+        "siblings": [],
+        "tags": ["AI", "database", "OpenAI"],
+        "type": "paragraph"
+      },
+      "text": "Weaviate vector database is used in the construction of the centralized knowledge base. OpenAI's text-embedding-ada-002 model is used to index all documents by translating their text into numerical representations. When a user searches, the most contextually relevant content is found by ranking relevance using cosine similarity. The system employs version control for any modified documents, detects and flags duplicate source files upon upload, and has automated data cleanup functions to preserve data integrity."
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 307.12089647,
+          "l": 143.358002,
+          "r": 214.02792386,
+          "t": 295.12089647
+        },
+        "context": "Introduction to the project's limitations.",
+        "continues": false,
+        "is_page_break": false,
+        "page": 2,
+        "row_index": null,
+        "section": "Scope and Limitations",
+        "siblings": [],
+        "tags": ["limitations"],
+        "type": "heading"
+      },
+      "text": "Limitations\nThis project aims to provide significant automation and intelligent support; however, there are some limitations to be acknowledged:"
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 430.87089647,
+          "l": 139.608002,
+          "r": 544.15096886,
+          "t": 418.87089647
+        },
+        "context": "Limitation regarding the personal assistant feature.",
+        "continues": true,
+        "is_page_break": false,
+        "page": 2,
+        "row_index": null,
+        "section": "Scope and Limitations",
+        "siblings": [],
+        "tags": ["limitations", "personal assistant"],
+        "type": "list"
+      },
+      "text": "a. Agent Personal Assistant features will not be available to all users during the initial version. Token consumption will be monitored, and access will be allocated only to users who critically require the functionality."
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 572.016098045,
+          "l": 162.108002,
+          "r": 544.1568338600001,
+          "t": 560.016098045
+        },
+        "context": "Limitation regarding data access.",
+        "continues": false,
+        "is_page_break": true,
+        "page": 2,
+        "row_index": null,
+        "section": "Scope and Limitations",
+        "siblings": [],
+        "tags": ["limitations", "data access"],
+        "type": "list"
+      },
+      "text": "b. Testing data access will be limited to up to six (6) months, depending on data volume, or all will be dummy data. This is to avoid exceeding usage limits under the free-tier plan, prevent undue financial burden on the student developers currently working on the system, and protect their sensitive data."
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 465.5,
+          "l": 72.50000027749999,
+          "r": 552.499982,
+          "t": 252.50000499500004
+        },
+        "context": "Table with project details and members.",
+        "continues": false,
+        "is_page_break": false,
+        "page": 3,
+        "row_index": null,
+        "section": "Project Details",
+        "siblings": [],
+        "tags": ["project details", "members"],
+        "type": "table"
+      },
+      "text": "PROGRAM: | Bachelors of Science on Information Technology\nDEFENSE DATE: | July 17, 2025\nTITLE: | SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics\nMEMBERS: | 1. Carla, Carlos Miguel M.\n | 2. Chua, Paul Andrew T.\n | 3. Hilario, Lance Joshua J.\n4. Joves, Josh Denziel S."
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 545.80401647,
+          "l": 72.108002,
+          "r": 543.5533163600002,
+          "t": 533.80401647
+        },
+        "context": "Adviser information and project approval statement.",
+        "continues": false,
+        "is_page_break": true,
+        "page": 3,
+        "row_index": null,
+        "section": "Project Details",
+        "siblings": [],
+        "tags": ["adviser", "approval"],
+        "type": "paragraph"
+      },
+      "text": "ADVISER: Mr. Sapit, Amado M. III\nThis is to verify that the objectives, scope, and limitations have been approved for Capstone Project development in IT 2621 1 (IT Capstone Project 2)."
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 390.60438722,
+          "l": 72.108002,
+          "r": 496.87167386,
+          "t": 378.60438722
+        },
+        "context": "Panel and verification information for the oral defense.",
+        "continues": false,
+        "is_page_break": false,
+        "page": 4,
+        "row_index": null,
+        "section": "Oral Defense",
+        "siblings": [],
+        "tags": ["oral defense", "verification"],
+        "type": "paragraph"
+      },
+      "text": "Capstone Project Oral Defense Panel: Signature/Date 1. Zhuo, Eugenia R.\n2. Estrella, Noel E.\n3. Domingo, Mylene J.\nVerified by: Noted by:\nSapit III, Amado M. Lintag, Leonid C. Technical Adviser Capstone Class Coordinator Date: ________________ Date: ________________"
+    },
+    {
+      "metadata": {
+        "box": {
+          "b": 140.953125,
+          "l": 42.858001708984375,
+          "r": 88.60800170898438,
+          "t": 95.953125
+        },
+        "context": "Image of a university ID card.",
+        "continues": false,
+        "image_height": 45.0,
+        "image_width": 45.75,
+        "is_page_break": false,
+        "page": 1,
+        "row_index": null,
+        "section": "Oral Defense",
+        "siblings": [],
+        "tags": ["ID card", "university"],
+        "type": "image"
+      },
+      "text": "Image of a university ID card."
+    }
+  ]
+}

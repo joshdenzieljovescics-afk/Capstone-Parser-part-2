@@ -1,0 +1,441 @@
+{
+  "chunks": [
+    {
+      "text": "UNIVERSITY OF SANTO TOMAS\nCollege of Information and Computing Sciences\nDepartment of Information Technology",
+      "metadata": {
+        "type": "heading",
+        "section": "Title Page",
+        "context": "University and department information.",
+        "tags": [
+          "university",
+          "department"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 105.46835375,
+          "t": 120.18478525500007,
+          "r": 526.4996027899999,
+          "b": 138.18478525500007
+        }
+      }
+    },
+    {
+      "text": "1st Semester A/Y 2025-2026",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Title Page",
+        "context": "Academic year information.",
+        "tags": [
+          "academic year"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 150.68333675,
+          "t": 142.68478525500007,
+          "r": 491.35618829000003,
+          "b": 175.72947204702155
+        }
+      }
+    },
+    {
+      "text": "Capstone Project Title Validation Form",
+      "metadata": {
+        "type": "heading",
+        "section": "Title Page",
+        "context": "Form title.",
+        "tags": [
+          "capstone",
+          "form"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": null
+      }
+    },
+    {
+      "text": "Proponents: Section: 4ITD 1. Carla, Carlos Miguel M.\n2. Chua, Paul Andrew T.\n3. Hilario, Lance Joshua J.\n4. Joves, Josh Denziel S.\n5. Sapit III, Amado M.",
+      "metadata": {
+        "type": "list",
+        "section": "Title Page",
+        "context": "List of project proponents.",
+        "tags": [
+          "proponents",
+          "students"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 119.82932975,
+          "t": 233.0989229449999,
+          "r": 425.87620661,
+          "b": 245.0989229449999
+        }
+      }
+    },
+    {
+      "text": "Project Title: SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Title Page",
+        "context": "Project title.",
+        "tags": [
+          "project",
+          "title"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": null
+      }
+    },
+    {
+      "text": "Capstone Class Coordinator: Lintag, Leonid C.",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Title Page",
+        "context": "Coordinator information.",
+        "tags": [
+          "coordinator"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 72.108002,
+          "t": 247.56651374,
+          "r": 513.06698636,
+          "b": 369.31651419499997
+        }
+      }
+    },
+    {
+      "text": "Oral defense date: July 17, 2025",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Title Page",
+        "context": "Defense date.",
+        "tags": [
+          "defense",
+          "date"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 72.108002,
+          "t": 381.56092854499997,
+          "r": 260.86777135999995,
+          "b": 393.56092854499997
+        }
+      }
+    },
+    {
+      "text": "Capstone Project Scope and Limitations:",
+      "metadata": {
+        "type": "heading",
+        "section": "Scope and Limitations",
+        "context": "Introduction to scope and limitations.",
+        "tags": [
+          "scope",
+          "limitations"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": true,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 72.108002,
+          "t": 406.248583565957,
+          "r": 392.96842211891607,
+          "b": 422.248584065957
+        }
+      }
+    },
+    {
+      "text": "Scope",
+      "metadata": {
+        "type": "heading",
+        "section": "Scope and Limitations",
+        "context": "Scope of the project.",
+        "tags": [
+          "scope"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 108.108002,
+          "t": 426.4190792,
+          "r": 276.46249745,
+          "b": 441.4190792
+        }
+      }
+    },
+    {
+      "text": "This capstone project focuses on the development of SafexpressOps, a web based logistics support platform powered by Agentic Artificial Intelligence, specifically tailored to enhance the operational workflows of Safexpress Logistics Inc. The core components and features included within the project scope are:",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Scope and Limitations",
+        "context": "Project focus and components.",
+        "tags": [
+          "project",
+          "focus"
+        ],
+        "row_index": null,
+        "continues": true,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 144.108002,
+          "t": 444.65333671999997,
+          "r": 544.4908163599999,
+          "b": 595.26609947
+        }
+      }
+    },
+    {
+      "text": "AI Powered Knowledge Base\n- Consolidates manuals, company policies, warehouse-specific workflows, client requirements, and internal structures into a centralized database, accessible via a conversational AI assistant.",
+      "metadata": {
+        "type": "list",
+        "section": "Scope and Limitations",
+        "context": "Features of the AI knowledge base.",
+        "tags": [
+          "AI",
+          "knowledge base"
+        ],
+        "row_index": null,
+        "continues": true,
+        "is_page_break": true,
+        "siblings": [],
+        "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 179.358002,
+          "t": 610.6722709395215,
+          "r": 322.11594723054196,
+          "b": 620.6722706895215
+        }
+      }
+    },
+    {
+      "text": "Weaviate vector database is used in the construction of the centralized knowledge base. OpenAI's text-embedding-ada-002 model is used to index all documents by translating their text into numerical representations. When a user searches, the most contextually relevant content is found by ranking relevance using cosine similarity. The system employs version control for any modified documents, detects and flags duplicate source files upon upload, and has automated data cleanup functions to preserve data integrity.",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Scope and Limitations",
+        "context": "Technical details of the knowledge base.",
+        "tags": [
+          "technical",
+          "details"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": true,
+        "siblings": [],
+        "page": 2,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 216.108002,
+          "t": 96.1722663145215,
+          "r": 544.140869730542,
+          "b": 106.17226606452152
+        }
+      }
+    },
+    {
+      "text": "Limitations",
+      "metadata": {
+        "type": "heading",
+        "section": "Scope and Limitations",
+        "context": "Limitations of the project.",
+        "tags": [
+          "limitations"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 2,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 143.358002,
+          "t": 119.4222663145215,
+          "r": 544.535189730542,
+          "b": 307.12089647
+        }
+      }
+    },
+    {
+      "text": "This project aims to provide significant automation and intelligent support; however, there are some limitations to be acknowledged:\na. Agent Personal Assistant features will not be available to all users during the initial version. Token consumption will be monitored, and access will be allocated only to users who critically require the functionality.\nb. Testing data access will be limited to up to six (6) months, depending on data volume, or all will be dummy data. This is to avoid exceeding usage limits under the free-tier plan, prevent undue financial burden on the student developers currently working on the system, and protect their sensitive data.",
+      "metadata": {
+        "type": "list",
+        "section": "Scope and Limitations",
+        "context": "Details of project limitations.",
+        "tags": [
+          "limitations",
+          "details"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": true,
+        "siblings": [],
+        "page": 2,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 180.108002,
+          "t": 323.10972646999994,
+          "r": 499.47909386000003,
+          "b": 335.10972646999994
+        }
+      }
+    },
+    {
+      "text": "PROGRAM: Bachelors of Science on Information Technology\nDEFENSE DATE: July 17, 2025\nTITLE: SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics\nMEMBERS: 1. Carla, Carlos Miguel M.\n2. Chua, Paul Andrew T.\n3. Hilario, Lance Joshua J.\n4. Joves, Josh Denziel S.",
+      "metadata": {
+        "type": "table",
+        "section": "Project Details",
+        "context": "Project and member details.",
+        "tags": [
+          "project",
+          "details"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": true,
+        "siblings": [],
+        "page": 3,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "b": 465.5,
+          "l": 72.50000027749999,
+          "r": 552.499982,
+          "t": 252.50000499500004
+        }
+      }
+    },
+    {
+      "text": "ADVISER: Mr. Sapit, Amado M. III\nThis is to verify that the objectives, scope, and limitations have been approved for Capstone Project development in IT 2621 1 (IT Capstone Project 2).",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Project Details",
+        "context": "Adviser and project approval.",
+        "tags": [
+          "adviser",
+          "approval"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 3,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 72.108002,
+          "t": 533.80401647,
+          "r": 543.5533163600002,
+          "b": 545.80401647
+        }
+      }
+    },
+    {
+      "text": "Capstone Project Oral Defense Panel: Signature/Date 1. Zhuo, Eugenia R.\n2. Estrella, Noel E.\n3. Domingo, Mylene J.\nVerified by: Noted by:\nSapit III, Amado M. Lintag, Leonid C. Technical Adviser Capstone Class Coordinator Date: ________________ Date: ________________",
+      "metadata": {
+        "type": "paragraph",
+        "section": "Oral Defense",
+        "context": "Panel and verification details.",
+        "tags": [
+          "oral defense",
+          "verification"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": true,
+        "siblings": [],
+        "page": 4,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": {
+          "l": 72.108002,
+          "t": 378.60438722,
+          "r": 496.87167386,
+          "b": 390.60438722
+        }
+      }
+    },
+    {
+      "text": "Image of a university ID card.",
+      "metadata": {
+        "type": "image",
+        "section": "Oral Defense",
+        "context": "Visual of a student ID card.",
+        "tags": [
+          "ID card",
+          "student"
+        ],
+        "row_index": null,
+        "continues": false,
+        "is_page_break": false,
+        "siblings": [],
+        "page": 4,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "processed_date": "2025-09-12T11:09:41.899119",
+        "box": null
+      }
+    }
+  ],
+  "document_metadata": {
+    "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+    "processed_date": "2025-09-12T11:09:42.068156",
+    "total_chunks": 18,
+    "processing_version": "1.0"
+  }
+}

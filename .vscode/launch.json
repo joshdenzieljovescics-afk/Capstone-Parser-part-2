@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Full Stack: Python + React",
+      "configurations": [
+        "Python: Backend",
+        "React: Vite"
+      ]
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Python: Backend",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/app.py", 
+      "args": [], 
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "React: Vite",
+      "url": "http://localhost:5173/",
+      "webRoot": "${workspaceFolder}/frontend/src"
+    }
+  ]
+}

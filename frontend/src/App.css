@@ -1,0 +1,213 @@
+Base styles
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f4f7f9;
+  color: #333;
+  margin: 0;
+  padding: 40px 20px;
+}
+
+.container {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+p {
+  color: #7f8c8d;
+  margin-bottom: 30px;
+}
+
+/* Upload section */
+.upload-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input[type="file"] {
+  border: 2px dashed #bdc3c7;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fff;
+  transition: border-color 0.3s;
+}
+input[type="file"]:hover {
+  border-color: #3498db;
+}
+
+button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+button:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* === Layout === */
+.main-content-area {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.pdf-preview-container,
+.parsed-output-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pdf-preview-container h2,
+.parsed-output-container h2 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ecf0f1;
+  margin-bottom: 15px;
+}
+
+/* === PDF Preview === */
+.pdf-document-wrapper {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  height: 75vh;
+  overflow-y: auto;
+  background-color: #fafafa;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.pdf-page-container {
+  position: relative;
+  margin-bottom: 20px;
+  line-height: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pdf-page-container canvas {
+  display: block;
+}
+
+.pdf-document-wrapper .placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* Bounding boxes */
+.bounding-box {
+  border: 1px dashed rgba(0, 0, 0, 0.6);
+  border-radius: 3px;
+  position: absolute;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+  z-index: 100; /* ✅ make sure it's above PDF canvas */
+  background-color: rgba(0, 255, 0, 0.15); /* ✅ always slightly visible */
+}
+
+.bounding-box.highlighted {
+  border: 2px solid red;
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+
+/* === Parsed Output === */
+.content-container {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+.placeholder {
+  padding: 20px;
+  font-style: italic;
+  margin: auto;
+  color: #7f8c8d;
+}
+
+.markdown-chunk {
+  padding: 8px 12px;
+  margin: 4px 0;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  cursor: pointer;
+}
+.markdown-chunk:hover {
+  background-color: rgba(52, 152, 219, 0.1);
+  transform: translateX(2px);
+}
+.markdown-chunk.hovered {
+  background-color: rgba(255, 223, 223, 0.7);
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 12px;
+}
+
+.chunk-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.chunk-type {
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.heading-level {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.style-info {
+  color: #666;
+  display: block;
+  margin-top: 5px;
+}
