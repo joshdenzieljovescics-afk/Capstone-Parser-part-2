@@ -16,15 +16,14 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [pdfPreviewFile, setPdfPreviewFile] = useState(null);
-  const [hoveredChunkIndex, setHoveredChunkIndex] = useState(null);
+  const [hoveredChunk, setHoveredChunk] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [pageDimensions, setPageDimensions] = useState({});
   const pageRefs = useRef([]);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
-  const [viewerTab, setViewerTab] = useState('parsed'); 
-  const [chunkDisplayMode, setChunkDisplayMode] = useState('regular');
+  const [viewerTab, setViewerTab] = useState('parsed');
+  const chunkDisplayMode = 'smart';
 
-  // Handle file selection
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && file.type === 'application/pdf') {
@@ -33,12 +32,12 @@ function App() {
       setJsonOutput(null);
       setChunkedOutput(null);
       setError('');
+      setHoveredChunk(null);
     } else {
       setError('Please select a valid PDF file.');
     }
   };
 
-  // Handle document parsing
   const handleParse = async () => {
     if (!selectedFile) {
       setError('Please select a PDF file first.');
@@ -50,6 +49,7 @@ function App() {
     setIsLoading(true);
     setError('');
     setJsonOutput(null);
+    setHoveredChunk(null);
 
     try {
       const response = await axios.post('http://127.0.0.1:5000/parse-pdf', formData, {
@@ -69,8 +69,6 @@ function App() {
     }
   };
 
-  // Handle chunk processing
-  
   const handleChunk = async () => {
     if (!jsonOutput) {
       setError('Please parse the PDF first.');
@@ -79,15 +77,14 @@ function App() {
 
     setIsLoading(true);
     setError('');
-
+    setHoveredChunk(null);
     try {
-      // Extract filename from selectedFile
       const filename = selectedFile ? selectedFile.name : 'unknown.pdf';
-      
+
       const response = await axios.post('http://127.0.0.1:5000/test-anchoring', {
         simplified_view: jsonOutput.simplified,
         structured: jsonOutput.structured,
-        source_filename: filename  // Add this
+        source_filename: filename
       });
 
       setChunkedOutput(response.data);
@@ -104,37 +101,57 @@ function App() {
     }
   };
 
-  // Handle PDF document load success
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
   };
 
-  // Handle page render success
+  // Improved page dimension handling
   const onPageRenderSuccess = (page) => {
     const pageNumber = page.pageNumber;
-    const viewport = page.getViewport({ scale: 1.0 });
     setPageDimensions(prev => ({
       ...prev,
       [pageNumber]: {
         width: page.width,
         height: page.height,
-        originalWidth: viewport.width,
-        originalHeight: viewport.height,
       }
     }));
   };
 
-  // Handle mouse enter on chunk
   const handleMouseEnter = (chunk, index) => {
-    setHoveredChunkIndex(index);
+    setHoveredChunk(chunk);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredChunk(null);
+  };
+
+  // Helper function to check if element is inside chunk
+  const isElementInChunk = (element, chunk, scaleX, scaleY) => {
+    if (!element.box || !chunk.metadata?.box) return false;
     
-    // Scroll to the page if chunk has page info
-    if (chunk.metadata?.page && pageRefs.current[chunk.metadata.page - 1]) {
-      pageRefs.current[chunk.metadata.page - 1].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
-    }
+    const elBox = element.box;
+    const chunkBox = chunk.metadata.box;
+    
+    // Apply scaling to element coordinates
+    const scaledElLeft = elBox.l * scaleX;
+    const scaledElRight = elBox.r * scaleX;
+    const scaledElTop = elBox.t * scaleY;
+    const scaledElBottom = elBox.b * scaleY;
+    
+    // Apply scaling to chunk coordinates
+    const scaledChunkLeft = chunkBox.l * scaleX;
+    const scaledChunkRight = chunkBox.r * scaleX;
+    const scaledChunkTop = chunkBox.t * scaleY;
+    const scaledChunkBottom = chunkBox.b * scaleY;
+    
+    // Check for overlap with tolerance
+    const tolerance = 5; // pixels
+    return !(
+      scaledElRight < scaledChunkLeft - tolerance ||
+      scaledElLeft > scaledChunkRight + tolerance ||
+      scaledElBottom < scaledChunkTop - tolerance ||
+      scaledElTop > scaledChunkBottom + tolerance
+    );
   };
 
   return (
@@ -147,8 +164,8 @@ function App() {
         <button onClick={handleParse} disabled={isLoading || !selectedFile}>
           {isLoading ? 'Parsing...' : 'Parse Document'}
         </button>
-        <button 
-          onClick={handleChunk} 
+        <button
+          onClick={handleChunk}
           disabled={isLoading || !jsonOutput}
         >
           {isLoading ? 'Processing...' : 'Process Chunks'}
@@ -168,7 +185,6 @@ function App() {
       {error && <p className="error-message">{error}</p>}
 
       <div className="main-content-area">
-        {/* PDF Preview Column */}
         <div className="pdf-preview-container">
           <h2>PDF Preview</h2>
           <div className="pdf-document-wrapper">
@@ -177,39 +193,50 @@ function App() {
                 {Array(numPages)
                   .fill()
                   .map((_, index) => (
-                  <div
-                    key={`page_container_${index + 1}`}
-                    ref={(el) => (pageRefs.current[index] = el)}
-                    className="pdf-page-container"
-                  >
-                    <Page pageNumber={index + 1} width={600} onRenderSuccess={onPageRenderSuccess} />
+                    <div
+                      key={`page_container_${index + 1}`}
+                      ref={(el) => (pageRefs.current[index] = el)}
+                      className="pdf-page-container"
+                    >
+                      <Page 
+                        pageNumber={index + 1} 
+                        width={600} 
+                        onRenderSuccess={onPageRenderSuccess} 
+                      />
 
-                    {/* Overlay bounding boxes from structured */}
-                    {jsonOutput?.structured
-                      ?.filter((el) => el.page === index + 1 && el.box)
-                      .map((el, elIndex) => {
-                        const { box, page_width, page_height } = el;
-                        const currentPageDimensions = pageDimensions[index + 1];
-                        if (!currentPageDimensions) return null;
+                      {/* Improved overlay bounding boxes */}
+                      {jsonOutput?.structured
+                        ?.filter((el) => el.page === index + 1 && el.box)
+                        .map((el, elIndex) => {
+                          const { box, page_width, page_height } = el;
+                          const currentPageDimensions = pageDimensions[index + 1];
+                          if (!currentPageDimensions) return null;
 
-                        const scaleX = currentPageDimensions.width / page_width;
-                        const scaleY = currentPageDimensions.height / page_height;
+                          // Calculate scaling factors based on rendered page size
+                          const scaleX = currentPageDimensions.width / page_width;
+                          const scaleY = currentPageDimensions.height / page_height;
 
-                        return (
-                          <div
-                            key={`box_${elIndex}`}
-                            className={`bounding-box`}
-                            style={{
-                              left: box.l * scaleX + 'px',
-                              top: box.t * scaleY + 'px',
-                              width: (box.r - box.l) * scaleX + 'px',
-                              height: (box.b - box.t) * scaleY + 'px',
-                            }}
-                          />
-                        );
-                      })}
-                  </div>
-                ))}
+                          // Determine if this element should be highlighted
+                          let isHovered = false;
+                          if (hoveredChunk?.metadata?.page === el.page) {
+                            isHovered = isElementInChunk(el, hoveredChunk, scaleX, scaleY);
+                          }
+
+                          return (
+                            <div
+                              key={`box_${elIndex}`}
+                              className={`bounding-box ${isHovered ? 'hovered' : ''}`}
+                              style={{
+                                left: box.l * scaleX + 'px',
+                                top: box.t * scaleY + 'px',
+                                width: (box.r - box.l) * scaleX + 'px',
+                                height: (box.b - box.t) * scaleY + 'px',
+                              }}
+                            />
+                          );
+                        })}
+                    </div>
+                  ))}
               </Document>
             ) : (
               <div className="placeholder">Select a PDF file to preview</div>
@@ -217,43 +244,9 @@ function App() {
           </div>
         </div>
 
-        {/* Parsed Output Column (with toggle) */}
         <div className="parsed-output-container">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <h2>Parsed Chunks</h2>
-            {/* Toggle buttons for chunk display mode */}
-            {chunkedOutput?.chunks?.length > 0 && (
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button
-                  onClick={() => setChunkDisplayMode('regular')}
-                  style={{
-                    padding: '6px 12px',
-                    background: chunkDisplayMode === 'regular' ? '#007acc' : '#333',
-                    color: 'white',
-                    border: '1px solid #444',
-                    borderRadius: 4,
-                    cursor: 'pointer',
-                    fontSize: 12,
-                  }}
-                >
-                  Regular
-                </button>
-                <button
-                  onClick={() => setChunkDisplayMode('smart')}
-                  style={{
-                    padding: '6px 12px',
-                    background: chunkDisplayMode === 'smart' ? '#007acc' : '#333',
-                    color: 'white',
-                    border: '1px solid #444',
-                    borderRadius: 4,
-                    cursor: 'pointer',
-                    fontSize: 12,
-                  }}
-                >
-                  Smart
-                </button>
-              </div>
-            )}
           </div>
 
           <div className="content-container">
@@ -266,8 +259,8 @@ function App() {
               <div
                 key={`chunk_text_${index}`}
                 onMouseEnter={() => handleMouseEnter(chunk, index)}
-                onMouseLeave={() => setHoveredChunkIndex(null)}
-                className={`markdown-chunk ${hoveredChunkIndex === index ? 'hovered' : ''}`}
+                onMouseLeave={handleMouseLeave}
+                className={`markdown-chunk ${hoveredChunk === chunk ? 'hovered' : ''}`}
               >
                 <div className="chunk-header">
                   <strong>Page {chunk.metadata?.page || 'N/A'}</strong>
@@ -275,25 +268,23 @@ function App() {
                   {chunk.metadata?.level && (
                     <span className="heading-level">H{chunk.metadata.level}</span>
                   )}
-                  {/* Show additional metadata for smart mode */}
-                  {chunkDisplayMode === 'smart' && chunk.metadata?.section && (
-                    <span className="chunk-section" style={{ fontSize: 12, color: '#666', marginLeft: 8 }}>
+                  {chunk.metadata?.section && (
+                    <span className="chunk-section">
                       {chunk.metadata.section}
                     </span>
                   )}
-                  {chunkDisplayMode === 'smart' && Array.isArray(chunk.metadata?.tags) && chunk.metadata.tags.length > 0 && (
-                    <span style={{ fontSize: 12, color: '#6aa84f', marginLeft: 8 }}>
+                  {Array.isArray(chunk.metadata?.tags) && chunk.metadata.tags.length > 0 && (
+                    <span className="chunk-tags">
                       {chunk.metadata.tags.join(', ')}
                     </span>
                   )}
                 </div>
-                
-                {/* Render content based on display mode */}
-                {chunkDisplayMode === 'smart' ? (
-                  <ReactMarkdown>{chunk.text}</ReactMarkdown>
-                ) : (
-                  <p>{chunk.text}</p>
-                )}
+
+                <div style={{ whiteSpace: 'pre-line' }}>
+                  <ReactMarkdown>
+                    {chunk.text}
+                  </ReactMarkdown>
+                </div>
 
                 {chunk.metadata?.style?.length > 0 && (
                   <small className="style-info">
@@ -306,95 +297,40 @@ function App() {
         </div>
       </div>
 
-      {/* Modal Viewer */}
       {isViewerOpen && (
         <div className="modal-backdrop" onClick={() => setIsViewerOpen(false)}>
           <div
             className="modal"
             onClick={(e) => e.stopPropagation()}
-            style={{
-              width: '80vw',
-              maxWidth: 1000,
-              height: '80vh',
-              background: '#1e1e1e',
-              color: '#ddd',
-              borderRadius: 8,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-            }}
           >
-            <div
-              className="modal-header"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '10px 16px',
-                borderBottom: '1px solid #333',
-              }}
-            >
+            <div className="modal-header">
               <div>
                 <button
                   onClick={() => setViewerTab('parsed')}
-                  className={viewerTab === 'parsed' ? 'active-tab' : ''}
-                  style={{
-                    marginRight: 8,
-                    padding: '6px 10px',
-                    background: viewerTab === 'parsed' ? '#2d2d2d' : '#1e1e1e',
-                    border: '1px solid #444',
-                    color: '#ddd',
-                    borderRadius: 4,
-                    cursor: 'pointer',
-                  }}
+                  className={`modal-tab-button ${viewerTab === 'parsed' ? 'active' : ''}`}
                 >
                   Parsed
                 </button>
                 <button
                   onClick={() => setViewerTab('smart')}
-                  className={viewerTab === 'smart' ? 'active-tab' : ''}
-                  style={{
-                    padding: '6px 10px',
-                    background: viewerTab === 'smart' ? '#2d2d2d' : '#1e1e1e',
-                    border: '1px solid #444',
-                    color: '#ddd',
-                    borderRadius: 4,
-                    cursor: 'pointer',
-                  }}
+                  className={`modal-tab-button ${viewerTab === 'smart' ? 'active' : ''}`}
                 >
-                  Smart
+                  Smart Chunks
                 </button>
               </div>
               <button
                 onClick={() => setIsViewerOpen(false)}
-                style={{
-                  padding: '6px 10px',
-                  background: '#1e1e1e',
-                  border: '1px solid #444',
-                  color: '#ddd',
-                  borderRadius: 4,
-                  cursor: 'pointer',
-                }}
+                className="modal-close-button"
               >
                 Close
               </button>
             </div>
 
-            <div className="modal-body" style={{ flex: 1, overflow: 'auto', padding: 16 }}>
+            <div className="modal-body">
               {viewerTab === 'parsed' && (
                 <>
                   {jsonOutput?.simplified ? (
-                    <pre
-                      style={{
-                        whiteSpace: 'pre-wrap',
-                        wordWrap: 'break-word',
-                        background: '#111',
-                        padding: 12,
-                        borderRadius: 6,
-                        border: '1px solid #333',
-                      }}
-                    >
+                    <pre className="modal-content-pre">
                       {jsonOutput.simplified}
                     </pre>
                   ) : (
@@ -406,41 +342,33 @@ function App() {
               {viewerTab === 'smart' && (
                 <>
                   {chunkedOutput?.chunks?.length ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div className="smart-chunks-container">
                       {chunkedOutput.chunks.map((chunk, idx) => (
                         <div
                           key={`smart_chunk_${idx}`}
-                          style={{
-                            padding: 12,
-                            background: '#111',
-                            borderRadius: 6,
-                            border: '1px solid #333',
-                          }}
+                          className="smart-chunk-card"
+                          style={{ whiteSpace: 'pre-line' }}
                         >
-                          <div style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+                          <div className="smart-chunk-header">
                             <strong>Page {chunk.metadata?.page ?? 'N/A'}</strong>
-                            <span
-                              style={{
-                                fontSize: 12,
-                                padding: '2px 6px',
-                                border: '1px solid #444',
-                                borderRadius: 4,
-                                background: '#222',
-                              }}
-                            >
+                            <span className="smart-chunk-type">
                               {chunk.metadata?.type}
                             </span>
                             {chunk.metadata?.section && (
-                              <span style={{ fontSize: 12, color: '#aaa' }}>{chunk.metadata.section}</span>
+                              <span className="smart-chunk-section">
+                                {chunk.metadata.section}
+                              </span>
                             )}
                             {Array.isArray(chunk.metadata?.tags) && chunk.metadata.tags.length > 0 && (
-                              <span style={{ fontSize: 12, color: '#6aa84f' }}>
+                              <span className="smart-chunk-tags">
                                 {chunk.metadata.tags.join(', ')}
                               </span>
                             )}
                           </div>
 
-                          <ReactMarkdown>{chunk.text || ''}</ReactMarkdown>
+                          <div style={{ whiteSpace: 'pre-line' }}>
+                            <ReactMarkdown className="smart-chunk-content">{chunk.text || ''}</ReactMarkdown>
+                          </div>
                         </div>
                       ))}
                     </div>

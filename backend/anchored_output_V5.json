@@ -18,11 +18,11 @@
         "page": 1,
         "box": {
           "l": 105.46835375,
-          "t": 97.68478525500007,
-          "r": 526.4996027899999,
-          "b": 222.295962484043
+          "t": 73.89755514499996,
+          "r": 521.49862529,
+          "b": 194.50872573404297
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
         "line_count": 5,
         "anchored": true
       }
@@ -43,13 +43,13 @@
         "siblings": [],
         "page": 1,
         "box": {
-          "l": 119.82932975,
-          "t": 233.0989229449999,
-          "r": 425.87620661,
-          "b": 302.76609846499997
+          "l": 78.858002,
+          "t": 228.24107029702145,
+          "r": 227.095612230542,
+          "b": 328.5222406895214
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 5,
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
+        "line_count": 7,
         "anchored": true
       }
     },
@@ -70,13 +70,13 @@
         "siblings": [],
         "page": 1,
         "box": {
-          "l": 72.108002,
-          "t": 247.56651374,
-          "r": 513.06698636,
-          "b": 344.76609647
+          "l": 74.358002,
+          "t": 342.76824313702144,
+          "r": 568.272749730542,
+          "b": 352.7682428870214
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 6,
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
+        "line_count": 1,
         "anchored": true
       }
     },
@@ -96,12 +96,12 @@
         "siblings": [],
         "page": 1,
         "box": {
-          "l": 72.108002,
-          "t": 357.31651419499997,
-          "r": 345.45370886,
-          "b": 393.56092854499997
+          "l": 72.858002,
+          "t": 377.2763905970215,
+          "r": 295.0674222305419,
+          "b": 409.2626578970214
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
         "line_count": 2,
         "anchored": true
       }
@@ -122,12 +122,12 @@
         "siblings": [],
         "page": 1,
         "box": {
-          "l": 72.108002,
-          "t": 406.248583565957,
-          "r": 392.96842211891607,
-          "b": 456.65333671999997
+          "l": 114.858002,
+          "t": 443.1082396970215,
+          "r": 315.366862230542,
+          "b": 520.6082394470214
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
         "line_count": 3,
         "anchored": true
       }
@@ -149,13 +149,13 @@
         "siblings": [],
         "page": 1,
         "box": {
-          "l": 108.108002,
-          "t": 426.4190792,
-          "r": 544.4908163599999,
-          "b": 567.51609947
+          "l": 186.858002,
+          "t": 544.3582396970214,
+          "r": 556.929667230542,
+          "b": 602.2722373220215
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 6,
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
+        "line_count": 3,
         "anchored": true
       }
     },
@@ -173,15 +173,15 @@
         "continues": true,
         "is_page_break": true,
         "siblings": [],
-        "page": 1,
+        "page": 2,
         "box": {
-          "l": 179.358002,
-          "t": 610.6722709395215,
-          "r": 544.357327230542,
-          "b": 692.6722742970214
+          "l": 240.858002,
+          "t": 122.97466417202145,
+          "r": 545.459639730542,
+          "b": 179.27224079702148
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 4,
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
+        "line_count": 3,
         "anchored": true
       }
     },
@@ -201,15 +201,8 @@
         "is_page_break": false,
         "siblings": [],
         "page": 2,
-        "box": {
-          "l": 216.108002,
-          "t": 119.4222663145215,
-          "r": 544.535189730542,
-          "b": 245.67226381452156
-        },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 6,
-        "anchored": true
+        "anchored": false,
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf"
       }
     },
     {
@@ -227,13 +220,13 @@
         "siblings": [],
         "page": 1,
         "box": {
-          "l": 72.108002,
-          "t": 295.12089647,
-          "r": 499.47909386000003,
-          "b": 422.248584065957
+          "l": 114.858002,
+          "t": 443.1082396970215,
+          "r": 550.685444730542,
+          "b": 513.0222427970214
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 4,
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
+        "line_count": 3,
         "anchored": true
       }
     },
@@ -253,13 +246,13 @@
         "siblings": [],
         "page": 2,
         "box": {
-          "l": 139.608002,
-          "t": 418.87089647,
-          "r": 544.1568338600001,
-          "b": 486.51609947
+          "l": 204.858002,
+          "t": 478.75982142202145,
+          "r": 564.029834730542,
+          "b": 585.0222410645215
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 3,
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
+        "line_count": 5,
         "anchored": true
       }
     },
@@ -279,12 +272,12 @@
         "siblings": [],
         "page": 2,
         "box": {
-          "l": 139.608002,
-          "t": 474.51609947,
-          "r": 544.4439413600002,
-          "b": 627.516100295
+          "l": 204.858002,
+          "t": 527.0222409395215,
+          "r": 565.693799730542,
+          "b": 657.0222410645215
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
         "line_count": 6,
         "anchored": true
       }
@@ -305,12 +298,12 @@
         "siblings": [],
         "page": 1,
         "box": {
-          "l": 72.108002,
-          "t": 247.56651374,
-          "r": 513.06698636,
-          "b": 344.76609647
+          "l": 74.358002,
+          "t": 282.52224093952145,
+          "r": 568.272749730542,
+          "b": 364.5222410120214
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
         "line_count": 6,
         "anchored": true
       }
@@ -331,13 +324,13 @@
         "siblings": [],
         "page": 3,
         "box": {
-          "l": 72.108002,
-          "t": 469.40330522,
-          "r": 543.5533163600002,
-          "b": 560.76609647
+          "l": 72.477323,
+          "t": 550.4188474220215,
+          "r": 514.766998230542,
+          "b": 573.0221206895216
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 3,
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
+        "line_count": 2,
         "anchored": true
       }
     },
@@ -358,12 +351,12 @@
         "page": 4,
         "box": {
           "l": 72.108002,
-          "t": 378.60438722,
-          "r": 496.87167386,
-          "b": 479.01609871999995
+          "t": 336.75101901999994,
+          "r": 482.7915938599999,
+          "b": 471.115948465
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 6,
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf",
+        "line_count": 8,
         "anchored": true
       }
     },
@@ -383,16 +376,16 @@
         "siblings": [],
         "page": 4,
         "anchored": false,
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf"
+        "source_file": "GROUP-3-VALIDATION-FORM.pdf"
       }
     }
   ],
   "document_metadata": {
-    "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-    "processed_date": "2025-09-14T02:07:49.035139",
+    "source_file": "GROUP-3-VALIDATION-FORM.pdf",
+    "processed_date": "2025-09-14T06:27:19.326969",
     "total_chunks": 15,
     "processing_version": "1.0",
-    "anchored_chunks": 14,
-    "unanchored_chunks": 1
+    "anchored_chunks": 13,
+    "unanchored_chunks": 2
   }
 }
