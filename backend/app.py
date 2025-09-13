@@ -37,7 +37,7 @@ client = OpenAI(api_key=openai_api_key)
 
 
 # --- STEP 1: Extract text, tables, figures/images, fonts ---
-def lines_from_chars(page, line_tol=5, word_tol=0.05):
+def lines_from_chars(page, line_tol=5, word_tol=None):
     """
     Group page.chars into lines; return list of line dicts with
     text, bbox, font_size, style, spacing metadata, and per-word font info.
@@ -48,6 +48,14 @@ def lines_from_chars(page, line_tol=5, word_tol=0.05):
     )
     if not chars:
         return []
+    
+ # Calculate adaptive word tolerance if not provided
+    if word_tol is None:
+        font_sizes = [c.get("size", 12) for c in chars if c.get("size")]
+        avg_font_size = statistics.median(font_sizes) if font_sizes else 12.0
+        word_tol = avg_font_size * 0.4  # 40% of font size for word separation
+        
+
 
     # --- group chars into lines
     lines = []
@@ -65,12 +73,24 @@ def lines_from_chars(page, line_tol=5, word_tol=0.05):
     line_objs = []
     prev_bottom = None
     for idx, ln in enumerate(lines):
+        # Calculate line-specific word tolerance
+        line_font_sizes = [c.get("size", 12) for c in ln if c.get("size")]
+        line_avg_font = statistics.median(line_font_sizes) if line_font_sizes else 12.0
+        line_word_tol = line_avg_font * 0.4  # Per-line adaptive tolerance
+
         # group chars into words within the line
         words = []
         current_word = [ln[0]]
         for ch in ln[1:]:
             prev = current_word[-1]
-            if abs(ch.get("x0", 0) - prev.get("x1", 0)) > word_tol:
+            gap = abs(ch.get("x0", 0) - prev.get("x1", 0))
+            
+            # Debug problematic gaps
+            # if gap > line_word_tol:
+            #     print(f"[DEBUG [PROBLIMATIC]]")
+            #     print(f"[DEBUG] Word break: '{prev.get('text', '')}'->'{ch.get('text', '')}' gap={gap:.2f} tol={line_word_tol:.2f}")
+            
+            if gap > line_word_tol:
                 words.append(current_word)
                 current_word = [ch]
             else:
@@ -128,6 +148,8 @@ def lines_from_chars(page, line_tol=5, word_tol=0.05):
             "line_breaks_after": 0,  # to be filled later
             "words": word_objs,
         })
+
+
     # --- fill line_breaks_after
     for i in range(len(line_objs) - 1):
         gap = line_objs[i+1]["box"]["t"] - line_objs[i]["box"]["b"]
@@ -197,7 +219,7 @@ def extract_images_with_bbox_pymupdf(file_bytes, page_number):
         # Enumerate all image xrefs used on this page
         xref_rows = page.get_images(full=True)  # [(xref, smask, w, h, bpc, cs, name, ...), ...]
         if not xref_rows:
-            print(f"[DEBUG] Page {page_number+1}: no image xrefs")
+            # print(f"[DEBUG] Page {page_number+1}: no image xrefs")
             return images
 
         for row in xref_rows:
@@ -227,7 +249,7 @@ def extract_images_with_bbox_pymupdf(file_bytes, page_number):
                     "image_b64": img_b64,
                 })
 
-    print(f"[DEBUG] Page {page_number+1}: Found {len(images)} images (from xref rects)")
+    # print(f"[DEBUG] Page {page_number+1}: Found {len(images)} images (from xref rects)")
     return images
 
 
@@ -266,7 +288,6 @@ def assemble_elements(file_bytes, page, page_number):
     - combine into one list sorted by vertical position
     """
     text_lines = lines_from_chars(page)  # enriched with style + spacing + word-level info
-    pprint(text_lines)
     tables = extract_tables_with_bbox(page)
     images = extract_images_with_bbox_pymupdf(file_bytes, page_number)
     
@@ -474,11 +495,14 @@ def parse_pdf():
                 structured.extend(page_elems)
 
         simplified = build_simplified_view_from_elements(structured)
+        
+        with open("structured_output_v2.json", "w") as f:
+            json.dump(structured, f, indent=2)
 
         # Debug preview
         print("\n[DEBUG] Simplified view (preview):\n")
         print(simplified[:5000])
-
+    
         # Collect images from structured
         # images = [el for el in structured if el.get("type") == "image"]
         # import base64
@@ -499,140 +523,236 @@ def parse_pdf():
         return jsonify({"error": f"Internal server error: {str(e)}"}), 500
 
 
-def _pdf_lines_for_match(structured):
-    # Flatten text lines in reading order
-    lines = [el for el in structured if el.get("type") == "text" and el.get("text")]
-    lines.sort(key=lambda e: (e.get("page", 0), e.get("box", {}).get("t", 0), e.get("box", {}).get("l", 0)))
-    out = []
-    for el in lines:
-        out.append({
-            "text": el.get("text", ""),
-            "page": el.get("page"),
-            "box": el.get("box")
-        })
-    return out
-
 def _normalize(s: str) -> str:
     return re.sub(r"\s+", " ", (s or "").strip())
 
-def _match_chunk_to_lines(chunk_text, pdf_lines, start_idx=0):
-    """
-    Greedy sequential substring matching across consecutive lines.
-    Returns: (page, bbox_union, next_idx) or (None, None, start_idx) if no match.
-    """
-    target = _normalize(chunk_text)
-    if not target:
-        return None, None, start_idx
-
-    for i in range(start_idx, len(pdf_lines)):
-        combined = _normalize(pdf_lines[i]["text"])
-        j = i
-        while True:
-            # exact/substring in either direction
-            if target == combined or target in combined or combined in target:
-                l = min(line["box"]["l"] for line in pdf_lines[i:j+1])
-                t = min(line["box"]["t"] for line in pdf_lines[i:j+1])
-                r = max(line["box"]["r"] for line in pdf_lines[i:j+1])
-                b = max(line["box"]["b"] for line in pdf_lines[i:j+1])
-                page = pdf_lines[i]["page"]
-                return page, {"l": l, "t": t, "r": r, "b": b}, j + 1
-            if j + 1 >= len(pdf_lines):
-                break
-            j += 1
-            combined = _normalize(combined + " " + pdf_lines[j]["text"])
-    return None, None, start_idx
-
 def _anchor_chunks_to_pdf(result_chunks, structured, image_bindings, source_filename):
     """
-    - For image chunks: assign page/box from image_bindings (order preserved).
-    - For text chunks: sequentially match to pdf lines and union bbox.
-    - For table chunks: map to next table on same page, else next global.
-    - Add general metadata: source_file, processed_date, etc.
+    Anchor AI result chunks back to PDF coordinates by matching text content.
+    Calculate proper bounding boxes for each chunk based on constituent lines.
+    Returns the modified chunks with anchoring metadata.
     """
-    from datetime import datetime
     
-    anchored = []
+    # Build searchable list of text lines from structured data
     pdf_lines = _pdf_lines_for_match(structured)
-    idx = 0  # pointer into pdf_lines for sequential matching
-
-    # General metadata for all chunks
-    processing_date = datetime.now().isoformat()
     
-    # Prepare tables by page in reading order
-    tables = [el for el in structured if el.get("type") == "table"]
-    tables.sort(key=lambda e: (e.get("page", 0), e.get("box", {}).get("t", 0)))
-    tables_by_page = {}
-    for tb in tables:
-        p = tb.get("page")
-        tables_by_page.setdefault(p, []).append(tb)
-    table_ptr = {p: 0 for p in tables_by_page.keys()}
-    global_tb_ptr = 0
+    for chunk in result_chunks:
+        chunk_text = chunk.get("text", "")
+        if not chunk_text.strip():
+            continue
+            
+        # Split chunk text into individual lines
+        chunk_lines = [line.strip() for line in chunk_text.split('\n') if line.strip()]
+        # Save the anchored result
+        with open("chunk_lines.json_V1.json", "w") as f:
+            json.dump(chunk_lines, f, indent=2)
 
-    img_ptr = 0  # pointer into image_bindings
-
-    for ch in result_chunks:
-        md = ch.get("metadata", {}) or {}
-        ctype = (md.get("type") or "").lower()
-
-        # Default copy-through
-        out = dict(ch)
-        out_md = dict(md)
-
-        # Add general metadata to ALL chunks
-        out_md["source_file"] = source_filename or "unknown.pdf"
-        out_md["processed_date"] = processing_date
         
-        # Keep all existing metadata from sample_output.json
-        # The dict(md) above preserves: context, tags, continues, is_page_break, siblings, etc.
-
-        if ctype == "image":
-            if img_ptr < len(image_bindings):
-                bind = image_bindings[img_ptr]
-                img_ptr += 1
-                out_md["page"] = bind["page"]
-                out_md["box"] = bind["box"]
-                # optional: carry image dims
-                out_md["image_width"] = bind.get("box", {}).get("r", 0) - bind.get("box", {}).get("l", 0)
-                out_md["image_height"] = bind.get("box", {}).get("b", 0) - bind.get("box", {}).get("t", 0)
+        
+        # Find matching lines in structured output
+        matched_lines = []
+        start_idx = 0
+        
+        for chunk_line in chunk_lines:
+            match_result = _match_chunk_to_lines(chunk_line, pdf_lines, start_idx)
+            if match_result:
+                matched_idx, matched_line_list = match_result  # Now returns list of lines
+                matched_lines.extend(matched_line_list)  # Add all matched lines
+                start_idx = matched_idx + len(matched_line_list)  # Skip past all matched lines
+                print(f"[DEBUG] Matched chunk line '{chunk_line[:30]}...' to {len(matched_line_list)} PDF lines")
             else:
-                # leave page as-is if model provided, but note missing binding
-                out_md.setdefault("page", None)
-                out_md["box"] = None
-
-        elif ctype == "table":
-            # Prefer a table on declared page
-            target_page = out_md.get("page")
-            picked = None
-            if target_page in tables_by_page:
-                tp = table_ptr.get(target_page, 0)
-                if tp < len(tables_by_page[target_page]):
-                    picked = tables_by_page[target_page][tp]
-                    table_ptr[target_page] = tp + 1
-            # Fallback: next global
-            if not picked and global_tb_ptr < len(tables):
-                picked = tables[global_tb_ptr]
-                global_tb_ptr += 1
-            if picked:
-                out_md["page"] = picked.get("page")
-                out_md["box"] = picked.get("box")
-            else:
-                out_md.setdefault("page", None)
-                out_md["box"] = None
-
+                print(f"[WARN] Could not match chunk line: '{chunk_line[:50]}...'")
+        
+        # Calculate encompassing bounding box from matched lines
+        if matched_lines:
+            chunk_box = _calculate_chunk_box(matched_lines)
+            
+            # Add box and page info to chunk metadata
+            if "metadata" not in chunk:
+                chunk["metadata"] = {}
+            
+            chunk["metadata"]["box"] = chunk_box
+            chunk["metadata"]["page"] = matched_lines[0].get("page", 1)
+            chunk["metadata"]["source_file"] = source_filename
+            chunk["metadata"]["line_count"] = len(matched_lines)
+            chunk["metadata"]["anchored"] = True  # Flag to indicate successful anchoring
+            
+            print(f"[DEBUG] Anchored chunk: page={chunk['metadata']['page']}, "
+                  f"lines={len(matched_lines)}, box={chunk_box}")
         else:
-            # Texty types: heading/paragraph/list etc.
-            page, box, idx = _match_chunk_to_lines(ch.get("text", ""), pdf_lines, idx)
-            if page is not None:
-                out_md["page"] = page
-                out_md["box"] = box
+            # Mark as unanchored but still add metadata structure
+            if "metadata" not in chunk:
+                chunk["metadata"] = {}
+            
+            chunk["metadata"]["anchored"] = False
+            chunk["metadata"]["source_file"] = source_filename
+            print(f"[WARN] No lines matched for chunk: '{chunk_text[:50]}...'")
+    
+    return result_chunks  # Return the modified chunks
+
+def _calculate_chunk_box(matched_lines):
+    """
+    Calculate bounding box that encompasses all matched lines.
+    Returns box dict with l, t, r, b coordinates.
+    """
+    if not matched_lines:
+        return {"l": 0, "t": 0, "r": 0, "b": 0}
+    
+    # Flatten the matched_lines list in case it contains nested lists
+    flattened_lines = []
+    for item in matched_lines:
+        if isinstance(item, list):
+            # If item is a list of lines (from multi-line matching)
+            flattened_lines.extend(item)
+        else:
+            # If item is a single line object
+            flattened_lines.append(item)
+
+    # Get all line boxes
+    line_boxes = []
+    for line in flattened_lines:
+        if isinstance(line, dict) and "box" in line and line["box"]:
+            line_boxes.append(line["box"])
+    
+    if not line_boxes:
+        return {"l": 0, "t": 0, "r": 0, "b": 0}
+    
+    # Calculate encompassing box
+    # t: top of first line (smallest t value)
+    top = min(box.get("t", 0) for box in line_boxes)
+    
+    # b: bottom of last line (largest b value) 
+    bottom = max(box.get("b", 0) for box in line_boxes)
+    
+    # l: leftmost position (smallest l value)
+    left = min(box.get("l", 0) for box in line_boxes)
+    
+    # r: rightmost position (largest r value)
+    right = max(box.get("r", 0) for box in line_boxes)
+    
+    return {
+        "l": left,
+        "t": top, 
+        "r": right,
+        "b": bottom
+    }
+
+def _match_chunk_to_lines(chunk_text, pdf_lines, start_idx=0):
+    """
+    Enhanced matching with multi-line support that returns both index and full line objects.
+    Combines consecutive lines when needed to match chunks that span multiple lines.
+    Always returns (index, [list_of_lines]) for consistency.
+    """
+    normalized_chunk = _normalize(chunk_text)
+    
+    # First try single line matches
+    for i in range(start_idx, len(pdf_lines)):
+        line = pdf_lines[i]
+        line_text = line.get("text", "")
+        normalized_line = _normalize(line_text)
+        
+        # Exact match
+        if normalized_chunk == normalized_line:
+            return (i, [line])
+        
+        # Partial match (chunk text contained in line)
+        if normalized_chunk in normalized_line:
+            return (i, [line])
+        
+        # Fuzzy match for minor differences
+        if len(normalized_chunk) > 10:  # Only for substantial text
+            common_words = set(normalized_chunk.split()) & set(normalized_line.split())
+            if len(common_words) >= len(normalized_chunk.split()) * 0.8:  # 80% word overlap
+                return (i, [line])
+    
+    # If no single line match, try multi-line matching
+    for i in range(start_idx, len(pdf_lines) - 1):  # -1 because we need at least 2 lines
+        combined_lines = [pdf_lines[i]]
+        combined_text_parts = [pdf_lines[i].get("text", "")]
+        
+        # Try combining with subsequent lines (up to 5 lines max)
+        for j in range(i + 1, min(i + 6, len(pdf_lines))):
+            next_line = pdf_lines[j]
+            
+            # Check if lines are on the same page and vertically close
+            if (_lines_are_on_same_page(combined_lines[-1], next_line) and 
+                _lines_are_vertically_close(combined_lines[-1], next_line)):
+                
+                combined_lines.append(next_line)
+                combined_text_parts.append(next_line.get("text", ""))
+                
+                # Test if the combined text matches the chunk
+                combined_text = " ".join(combined_text_parts)
+                normalized_combined = _normalize(combined_text)
+                
+                # Exact match with combined lines
+                if normalized_chunk == normalized_combined:
+                    return (i, combined_lines)
+                
+                # Partial match (chunk contained in combined text)
+                if normalized_chunk in normalized_combined:
+                    return (i, combined_lines)
+                
+                # Fuzzy match with combined text
+                if len(normalized_chunk) > 10:
+                    chunk_words = set(normalized_chunk.split())
+                    combined_words = set(normalized_combined.split())
+                    common_words = chunk_words & combined_words
+                    if len(common_words) >= len(chunk_words) * 0.8:
+                        return (i, combined_lines)
             else:
-                out_md.setdefault("page", None)
-                out_md["box"] = None
+                # Lines are too far apart, stop combining
+                break
+    
+    return None
 
-        out["metadata"] = out_md
-        anchored.append(out)
+def _lines_are_on_same_page(line1, line2):
+    """Check if two lines are on the same page"""
+    return line1.get("page") == line2.get("page")
 
-    return anchored
+def _lines_are_vertically_close(line1, line2, threshold_multiplier=2.0):
+    """
+    Check if two lines are vertically close enough to be considered continuous.
+    Uses a more generous threshold for multi-line matching.
+    """
+    try:
+        line1_box = line1.get("box", {})
+        line2_box = line2.get("box", {})
+        
+        line1_bottom = line1_box.get("b", 0)
+        line2_top = line2_box.get("t", 0)
+        
+        # Calculate line heights
+        line1_height = line1_box.get("b", 0) - line1_box.get("t", 0)
+        line2_height = line2_box.get("b", 0) - line2_box.get("t", 0)
+        avg_height = (line1_height + line2_height) / 2
+        
+        # Gap between lines
+        gap = line2_top - line1_bottom
+        
+        # Lines are close if gap is less than 2x average line height (more generous)
+        return gap < (avg_height * threshold_multiplier)
+    except (KeyError, TypeError, ZeroDivisionError):
+        return False
+    
+def _pdf_lines_for_match(structured):
+    """
+    Extract text lines from structured output, preserving line objects with metadata.
+    """
+    lines = []
+    for element in structured:
+        if element.get("type") == "text" and "text" in element:
+            lines.append({
+                "text": element["text"],
+                "box": element.get("box", {}),
+                "page": element.get("page", 1),
+                "id": element.get("id", ""),
+                "type": element.get("type", "text")
+            })
+        # Save the anchored result
+        # with open("_pdf_lines_for_match_V1.json", "w") as f:
+        #     json.dump(lines, f, indent=2)   
+    return lines
 
 @app.route('/test-anchoring', methods=['POST'])
 def test_anchoring():
@@ -655,7 +775,7 @@ def test_anchoring():
         with open("sample_output.json", "r") as f:
             result = json.load(f)
         
-        print(f"[DEBUG] Loaded sample output with {len(result.get('chunks', []))} chunks")
+        # print(f"[DEBUG] Loaded sample output with {len(result.get('chunks', []))} chunks")
         
         # Create empty image_bindings since you're not using OpenAI
         image_bindings = []
@@ -674,17 +794,19 @@ def test_anchoring():
             "source_file": source_filename,
             "processed_date": datetime.now().isoformat(),
             "total_chunks": len(anchored_chunks),
-            "processing_version": "1.0"
+            "processing_version": "1.0",
+            "anchored_chunks": sum(1 for chunk in anchored_chunks if chunk.get("metadata", {}).get("anchored", False)),
+            "unanchored_chunks": sum(1 for chunk in anchored_chunks if not chunk.get("metadata", {}).get("anchored", False))
         }
         
         # Save the anchored result
-        # with open("anchored_output.json", "w") as f:
-        #     json.dump(result, f, indent=2)
+        with open("anchored_output_V5.json", "w") as f:
+            json.dump(result, f, indent=2)
         # print("[DEBUG] anchored_output.json created successfully")
         
-        print("\n[DEBUG] Anchored result (first chunk metadata):")
-        if anchored_chunks:
-            print(json.dumps(anchored_chunks[0]["metadata"], indent=2))
+        # print("\n[DEBUG] Anchored result (first chunk metadata):")
+        # if anchored_chunks:
+        #     print(json.dumps(anchored_chunks[0]["metadata"], indent=2))
         
         return jsonify(result), 200
         
@@ -937,6 +1059,8 @@ JSON_SCHEMA = """{
     }
   ]
 }"""
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

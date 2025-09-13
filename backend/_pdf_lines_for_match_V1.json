@@ -1,0 +1,686 @@
+[
+  {
+    "text": "UNIVERSITY OF SANTO TOMAS",
+    "box": {
+      "b": 115.68478525500007,
+      "l": 173.30233775,
+      "r": 458.66562179000005,
+      "t": 97.68478525500007
+    },
+    "page": 1,
+    "id": "ln-2",
+    "type": "text"
+  },
+  {
+    "text": "College of Information and Computing Sciences",
+    "box": {
+      "b": 138.18478525500007,
+      "l": 105.46835375,
+      "r": 526.4996027899999,
+      "t": 120.18478525500007
+    },
+    "page": 1,
+    "id": "ln-3",
+    "type": "text"
+  },
+  {
+    "text": "Department of Information Technology",
+    "box": {
+      "b": 160.68478525500007,
+      "l": 150.68333675,
+      "r": 491.35618829000003,
+      "t": 142.68478525500007
+    },
+    "page": 1,
+    "id": "ln-4",
+    "type": "text"
+  },
+  {
+    "text": "1st Semester A/Y 2025-2026",
+    "box": {
+      "b": 175.72947204702155,
+      "l": 240.8897795,
+      "r": 373.14995326096187,
+      "t": 165.72947229702152
+    },
+    "page": 1,
+    "id": "ln-5",
+    "type": "text"
+  },
+  {
+    "text": "Capstone Project Title Validation Form",
+    "box": {
+      "b": 222.295962484043,
+      "l": 178.8621065,
+      "r": 442.95259228108404,
+      "t": 208.29596298404294
+    },
+    "page": 1,
+    "id": "ln-7",
+    "type": "text"
+  },
+  {
+    "text": "Proponents: Section: 4ITD 1. Carla, Carlos Miguel M.",
+    "box": {
+      "b": 245.0989229449999,
+      "l": 119.82932975,
+      "r": 425.87620661,
+      "t": 233.0989229449999
+    },
+    "page": 1,
+    "id": "ln-8",
+    "type": "text"
+  },
+  {
+    "text": "2. Chua, Paul Andrew T.",
+    "box": {
+      "b": 259.56651374,
+      "l": 144.108002,
+      "r": 286.57284386,
+      "t": 247.56651374
+    },
+    "page": 1,
+    "id": "ln-9",
+    "type": "text"
+  },
+  {
+    "text": "3. Hilario, Lance Joshua J.",
+    "box": {
+      "b": 274.2660984649999,
+      "l": 144.108002,
+      "r": 301.49667386,
+      "t": 262.2660984649999
+    },
+    "page": 1,
+    "id": "ln-10",
+    "type": "text"
+  },
+  {
+    "text": "4. Joves, Josh Denziel S.",
+    "box": {
+      "b": 288.51609846499997,
+      "l": 144.108002,
+      "r": 292.83652135999995,
+      "t": 276.516098465
+    },
+    "page": 1,
+    "id": "ln-11",
+    "type": "text"
+  },
+  {
+    "text": "5. Sapit III, Amado M.",
+    "box": {
+      "b": 302.76609846499997,
+      "l": 144.108002,
+      "r": 270.79354886,
+      "t": 290.76609846499997
+    },
+    "page": 1,
+    "id": "ln-12",
+    "type": "text"
+  },
+  {
+    "text": "Project Title: SafexpressOps: An Agentic AI Platform for Intelligent Workflow",
+    "box": {
+      "b": 330.60972646999994,
+      "l": 72.108002,
+      "r": 513.06698636,
+      "t": 318.60972646999994
+    },
+    "page": 1,
+    "id": "ln-13",
+    "type": "text"
+  },
+  {
+    "text": "Automation and Company-Aware Operational Analytics",
+    "box": {
+      "b": 344.76609647,
+      "l": 72.108002,
+      "r": 394.60800386,
+      "t": 332.76609647
+    },
+    "page": 1,
+    "id": "ln-14",
+    "type": "text"
+  },
+  {
+    "text": "Capstone Class Coordinator: Lintag, Leonid C.",
+    "box": {
+      "b": 369.31651419499997,
+      "l": 72.108002,
+      "r": 345.45370886,
+      "t": 357.31651419499997
+    },
+    "page": 1,
+    "id": "ln-15",
+    "type": "text"
+  },
+  {
+    "text": "Oral defense date: July 17, 2025",
+    "box": {
+      "b": 393.56092854499997,
+      "l": 72.108002,
+      "r": 260.86777135999995,
+      "t": 381.56092854499997
+    },
+    "page": 1,
+    "id": "ln-16",
+    "type": "text"
+  },
+  {
+    "text": "Capstone Project Scope and Limitations:",
+    "box": {
+      "b": 422.248584065957,
+      "l": 72.108002,
+      "r": 392.96842211891607,
+      "t": 406.248583565957
+    },
+    "page": 1,
+    "id": "ln-17",
+    "type": "text"
+  },
+  {
+    "text": "Scope and Limitations",
+    "box": {
+      "b": 441.4190792,
+      "l": 108.108002,
+      "r": 276.46249745,
+      "t": 426.4190792
+    },
+    "page": 1,
+    "id": "ln-18",
+    "type": "text"
+  },
+  {
+    "text": "Scope",
+    "box": {
+      "b": 456.65333671999997,
+      "l": 144.108002,
+      "r": 186.78768986,
+      "t": 444.65333671999997
+    },
+    "page": 1,
+    "id": "ln-19",
+    "type": "text"
+  },
+  {
+    "text": "This capstone project focuses on the development of",
+    "box": {
+      "b": 484.35975797,
+      "l": 180.108002,
+      "r": 544.4908163599999,
+      "t": 472.35975797
+    },
+    "page": 1,
+    "id": "ln-20",
+    "type": "text"
+  },
+  {
+    "text": "SafexpressOps, a web based logistics support platform powered by",
+    "box": {
+      "b": 512.01609947,
+      "l": 144.108002,
+      "r": 543.95761136,
+      "t": 500.01609947
+    },
+    "page": 1,
+    "id": "ln-21",
+    "type": "text"
+  },
+  {
+    "text": "Agentic Artificial Intelligence, specifically tailored to enhance the",
+    "box": {
+      "b": 539.76609947,
+      "l": 144.108002,
+      "r": 544.45565636,
+      "t": 527.76609947
+    },
+    "page": 1,
+    "id": "ln-22",
+    "type": "text"
+  },
+  {
+    "text": "operational workflows of Safexpress Logistics Inc. The core",
+    "box": {
+      "b": 567.51609947,
+      "l": 144.108002,
+      "r": 544.2798788599999,
+      "t": 555.51609947
+    },
+    "page": 1,
+    "id": "ln-23",
+    "type": "text"
+  },
+  {
+    "text": "components and features included within the project scope are:",
+    "box": {
+      "b": 595.26609947,
+      "l": 144.108002,
+      "r": 512.1705038599999,
+      "t": 583.26609947
+    },
+    "page": 1,
+    "id": "ln-24",
+    "type": "text"
+  },
+  {
+    "text": "AI Powered Knowledge Base",
+    "box": {
+      "b": 620.6722706895215,
+      "l": 179.358002,
+      "r": 322.11594723054196,
+      "t": 610.6722709395215
+    },
+    "page": 1,
+    "id": "ln-25",
+    "type": "text"
+  },
+  {
+    "text": "- Consolidates manuals, company policies, warehouse-specific",
+    "box": {
+      "b": 646.2658986720214,
+      "l": 198.85803199999998,
+      "r": 544.357327230542,
+      "t": 636.2658989220215
+    },
+    "page": 1,
+    "id": "ln-26",
+    "type": "text"
+  },
+  {
+    "text": "workflows, client requirements, and internal structures into a",
+    "box": {
+      "b": 669.4222690470215,
+      "l": 216.10803199999998,
+      "r": 544.086839730542,
+      "t": 659.4222692970214
+    },
+    "page": 1,
+    "id": "ln-27",
+    "type": "text"
+  },
+  {
+    "text": "centralized database, accessible via a conversational AI assistant. A",
+    "box": {
+      "b": 692.6722742970214,
+      "l": 216.10803199999998,
+      "r": 544.104644730542,
+      "t": 682.6722745470215
+    },
+    "page": 1,
+    "id": "ln-28",
+    "type": "text"
+  },
+  {
+    "text": "Weaviate vector database is used in the construction of the",
+    "box": {
+      "b": 82.92226568952151,
+      "l": 216.108002,
+      "r": 544.3857297305419,
+      "t": 72.92226593952148
+    },
+    "page": 2,
+    "id": "ln-1",
+    "type": "text"
+  },
+  {
+    "text": "centralized knowledge base. OpenAI's text-embedding-ada-002",
+    "box": {
+      "b": 106.17226606452152,
+      "l": 216.108002,
+      "r": 544.140869730542,
+      "t": 96.1722663145215
+    },
+    "page": 2,
+    "id": "ln-2",
+    "type": "text"
+  },
+  {
+    "text": "model is used to index all documents by translating their text into",
+    "box": {
+      "b": 129.42226606452152,
+      "l": 216.108002,
+      "r": 544.535189730542,
+      "t": 119.4222663145215
+    },
+    "page": 2,
+    "id": "ln-3",
+    "type": "text"
+  },
+  {
+    "text": "numerical representations. When a user searches, the most",
+    "box": {
+      "b": 152.67226606452152,
+      "l": 216.108002,
+      "r": 544.2085272305421,
+      "t": 142.6722663145215
+    },
+    "page": 2,
+    "id": "ln-4",
+    "type": "text"
+  },
+  {
+    "text": "contextually relevant content is found by ranking relevance using",
+    "box": {
+      "b": 175.92226606452152,
+      "l": 216.108002,
+      "r": 544.008052230542,
+      "t": 165.9222663145215
+    },
+    "page": 2,
+    "id": "ln-5",
+    "type": "text"
+  },
+  {
+    "text": "cosine similarity. The system employs version control for any",
+    "box": {
+      "b": 199.17226606452152,
+      "l": 216.108002,
+      "r": 544.462447230542,
+      "t": 189.1722663145215
+    },
+    "page": 2,
+    "id": "ln-6",
+    "type": "text"
+  },
+  {
+    "text": "modified documents, detects and flags duplicate source files upon",
+    "box": {
+      "b": 222.42226381452156,
+      "l": 216.108002,
+      "r": 544.288109730542,
+      "t": 212.42226406452153
+    },
+    "page": 2,
+    "id": "ln-7",
+    "type": "text"
+  },
+  {
+    "text": "upload, and has automated data cleanup functions to preserve data",
+    "box": {
+      "b": 245.67226381452156,
+      "l": 216.108002,
+      "r": 544.433062230542,
+      "t": 235.67226406452153
+    },
+    "page": 2,
+    "id": "ln-8",
+    "type": "text"
+  },
+  {
+    "text": "integrity.",
+    "box": {
+      "b": 268.92226381452156,
+      "l": 216.108002,
+      "r": 260.35425198054196,
+      "t": 258.9222640645215
+    },
+    "page": 2,
+    "id": "ln-9",
+    "type": "text"
+  },
+  {
+    "text": "Limitations",
+    "box": {
+      "b": 307.12089647,
+      "l": 143.358002,
+      "r": 214.02792386,
+      "t": 295.12089647
+    },
+    "page": 2,
+    "id": "ln-10",
+    "type": "text"
+  },
+  {
+    "text": "This project aims to provide significant automation and",
+    "box": {
+      "b": 335.10972646999994,
+      "l": 180.108002,
+      "r": 499.47909386000003,
+      "t": 323.10972646999994
+    },
+    "page": 2,
+    "id": "ln-11",
+    "type": "text"
+  },
+  {
+    "text": "intelligent support; however, there are some limitations to be",
+    "box": {
+      "b": 362.76609947,
+      "l": 144.858002,
+      "r": 495.58846886000003,
+      "t": 350.76609947
+    },
+    "page": 2,
+    "id": "ln-12",
+    "type": "text"
+  },
+  {
+    "text": "acknowledged:",
+    "box": {
+      "b": 390.51609647,
+      "l": 144.858002,
+      "r": 238.20956486,
+      "t": 378.51609647
+    },
+    "page": 2,
+    "id": "ln-13",
+    "type": "text"
+  },
+  {
+    "text": "a. Agent Personal Assistant features will not be available to all users",
+    "box": {
+      "b": 430.87089647,
+      "l": 139.608002,
+      "r": 544.15096886,
+      "t": 418.87089647
+    },
+    "page": 2,
+    "id": "ln-14",
+    "type": "text"
+  },
+  {
+    "text": "during the initial version. Token consumption will be monitored,",
+    "box": {
+      "b": 458.76609947,
+      "l": 162.108002,
+      "r": 544.1568338600001,
+      "t": 446.76609947
+    },
+    "page": 2,
+    "id": "ln-15",
+    "type": "text"
+  },
+  {
+    "text": "and access will be allocated only to users who critically require",
+    "box": {
+      "b": 486.51609947,
+      "l": 162.108002,
+      "r": 544.1568338600001,
+      "t": 474.51609947
+    },
+    "page": 2,
+    "id": "ln-16",
+    "type": "text"
+  },
+  {
+    "text": "the functionality.",
+    "box": {
+      "b": 514.26609947,
+      "l": 162.108002,
+      "r": 263.88534611,
+      "t": 502.26609947
+    },
+    "page": 2,
+    "id": "ln-17",
+    "type": "text"
+  },
+  {
+    "text": "b. Testing data access will be limited to up to six (6) months,",
+    "box": {
+      "b": 544.620896045,
+      "l": 139.608002,
+      "r": 544.4439413600002,
+      "t": 532.620896045
+    },
+    "page": 2,
+    "id": "ln-18",
+    "type": "text"
+  },
+  {
+    "text": "depending on data volume, or all will be dummy data. This is to",
+    "box": {
+      "b": 572.016098045,
+      "l": 162.108002,
+      "r": 544.1568338600001,
+      "t": 560.016098045
+    },
+    "page": 2,
+    "id": "ln-19",
+    "type": "text"
+  },
+  {
+    "text": "avoid exceeding usage limits under the free-tier plan, prevent",
+    "box": {
+      "b": 599.766100295,
+      "l": 162.108002,
+      "r": 544.0396463600001,
+      "t": 587.766100295
+    },
+    "page": 2,
+    "id": "ln-20",
+    "type": "text"
+  },
+  {
+    "text": "undue financial burden on the student developers currently",
+    "box": {
+      "b": 627.516100295,
+      "l": 162.108002,
+      "r": 543.82284386,
+      "t": 615.516100295
+    },
+    "page": 2,
+    "id": "ln-21",
+    "type": "text"
+  },
+  {
+    "text": "working on the system, and protect their sensitive data.",
+    "box": {
+      "b": 655.2660950449999,
+      "l": 162.108002,
+      "r": 486.18417386,
+      "t": 643.2660950449999
+    },
+    "page": 2,
+    "id": "ln-22",
+    "type": "text"
+  },
+  {
+    "text": "ADVISER: Mr. Sapit, Amado M. III",
+    "box": {
+      "b": 481.40330522,
+      "l": 113.358002,
+      "r": 308.04745885999995,
+      "t": 469.40330522
+    },
+    "page": 3,
+    "id": "ln-14",
+    "type": "text"
+  },
+  {
+    "text": "This is to verify that the objectives, scope, and limitations have been approved for",
+    "box": {
+      "b": 545.80401647,
+      "l": 72.108002,
+      "r": 543.5533163600002,
+      "t": 533.80401647
+    },
+    "page": 3,
+    "id": "ln-17",
+    "type": "text"
+  },
+  {
+    "text": "Capstone Project development in IT 26211 (IT Capstone Project 2).",
+    "box": {
+      "b": 560.76609647,
+      "l": 72.108002,
+      "r": 456.20761136,
+      "t": 548.76609647
+    },
+    "page": 3,
+    "id": "ln-18",
+    "type": "text"
+  },
+  {
+    "text": "Capstone Project Oral Defense Panel: Signature/Date 1. Zhuo, Eugenia R.",
+    "box": {
+      "b": 390.60438722,
+      "l": 72.108002,
+      "r": 496.87167386,
+      "t": 378.60438722
+    },
+    "page": 4,
+    "id": "ln-2",
+    "type": "text"
+  },
+  {
+    "text": "2. Estrella, Noel E.",
+    "box": {
+      "b": 405.06649871749994,
+      "l": 126.108002,
+      "r": 236.82089261,
+      "t": 393.06649871749994
+    },
+    "page": 4,
+    "id": "ln-3",
+    "type": "text"
+  },
+  {
+    "text": "3. Domingo, Mylene J.",
+    "box": {
+      "b": 419.76609846499997,
+      "l": 126.108002,
+      "r": 255.46542386,
+      "t": 407.76609846499997
+    },
+    "page": 4,
+    "id": "ln-4",
+    "type": "text"
+  },
+  {
+    "text": "Verified by: Noted by:",
+    "box": {
+      "b": 434.01609846499997,
+      "l": 72.108002,
+      "r": 202.12753135999998,
+      "t": 422.01609846499997
+    },
+    "page": 4,
+    "id": "ln-5",
+    "type": "text"
+  },
+  {
+    "text": "Sapit III, Amado M. Lintag, Leonid C. Technical Adviser Capstone Class",
+    "box": {
+      "b": 464.04429722,
+      "l": 72.858002,
+      "r": 482.0415938599999,
+      "t": 452.04429722
+    },
+    "page": 4,
+    "id": "ln-6",
+    "type": "text"
+  },
+  {
+    "text": "Coordinator Date: ________________ Date: ________________",
+    "box": {
+      "b": 479.01609871999995,
+      "l": 72.108002,
+      "r": 431.01229886,
+      "t": 467.01609871999995
+    },
+    "page": 4,
+    "id": "ln-7",
+    "type": "text"
+  }
+]
