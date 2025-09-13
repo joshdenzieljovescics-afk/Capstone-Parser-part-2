@@ -1209,8 +1209,7 @@ JSON_SCHEMA = """{
   ]
 }"""
 
-# ...existing code...
+
+
 if __name__ == '__main__':
-    # Avoid Werkzeug reloader exit code 3 under debugpy
-    app.run(host="127.0.0.1", port=5000, debug=True)
-# ...existing code...
+    app.run(debug=True)
