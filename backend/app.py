@@ -7,12 +7,12 @@ from datetime import datetime
 import pdfplumber
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-# from openai import OpenAI   # ❌ Commented out
 from pprint import pprint
 from dotenv import load_dotenv
 import fitz
 import base64
 from openai import OpenAI
+import uuid  # Add this import at the top
 
 load_dotenv()
 
@@ -72,6 +72,10 @@ def lines_from_chars(page, line_tol=5, word_tol=None):
     # --- build line objects
     line_objs = []
     prev_bottom = None
+
+    # Get page number from page object for unique ID generation
+    page_number = getattr(page, 'page_number', 1)
+
     for idx, ln in enumerate(lines):
         # Calculate line-specific word tolerance
         line_font_sizes = [c.get("size", 12) for c in ln if c.get("size")]
@@ -138,8 +142,11 @@ def lines_from_chars(page, line_tol=5, word_tol=None):
             line_breaks_before = 1
         prev_bottom = b
 
+        # Generate unique line ID with page prefix
+        unique_line_id = f"p{page_number}-ln-{idx}"
+
         line_objs.append({
-            "id": f"ln-{idx}",
+            "id": unique_line_id,
             "type": "text",
             "text": " ".join(w["text"] for w in word_objs),
             "box": {"l": l, "t": t, "r": r, "b": b},
@@ -158,9 +165,6 @@ def lines_from_chars(page, line_tol=5, word_tol=None):
 
     return line_objs
 
-
-
-
 def extract_tables_with_bbox(page):
     """
     Use page.find_tables() to get table objects and their bbox.
@@ -168,7 +172,11 @@ def extract_tables_with_bbox(page):
     """
     tables = []
     found = page.find_tables()
-    for t in found:
+
+     # Get page number for unique ID generation
+    page_number = getattr(page, 'page_number', 1)
+
+    for table_idx, t in enumerate(found):
         bbox = getattr(t, "bbox", None) or getattr(t, "_bbox", None)
         if bbox and len(bbox) == 4:
             l, ttop, r, btm = bbox
@@ -189,7 +197,10 @@ def extract_tables_with_bbox(page):
                 l, ttop, r, btm = 0, 0, page.width, page.height
 
         table_rows = t.extract()
+        unique_table_id = f"p{page_number}-tbl-{table_idx}"
+
         tables.append({
+            "id": unique_table_id,  # ✅ Add unique ID
             "type": "table",
             "table": table_rows,
             "box": {"l": l, "t": ttop, "r": r, "b": btm},
@@ -209,9 +220,10 @@ def line_intersects_bbox(line, bbox, margin=1.0):
 
 # --- Extract images using PyMuPDF ---
 def extract_images_with_bbox_pymupdf(file_bytes, page_number):
-    # Uses xref placement rects to get true positions of images on the page
-
-
+    """
+    Uses xref placement rects to get true positions of images on the page.
+    Returns list of dicts with unique IDs.
+    """
     images = []
     with fitz.open(stream=file_bytes, filetype="pdf") as doc:
         page = doc[page_number]
@@ -219,10 +231,11 @@ def extract_images_with_bbox_pymupdf(file_bytes, page_number):
         # Enumerate all image xrefs used on this page
         xref_rows = page.get_images(full=True)  # [(xref, smask, w, h, bpc, cs, name, ...), ...]
         if not xref_rows:
-            # print(f"[DEBUG] Page {page_number+1}: no image xrefs")
             return images
+        
+        image_counter = 0  # Counter for multiple placements of same xref
 
-        for row in xref_rows:
+        for xref_idx, row in enumerate(xref_rows):  # ✅ Use enumerate
             xref = row[0]
             rects = page.get_image_rects(xref)  # all placements (may be multiple)
             if not rects:
@@ -241,7 +254,13 @@ def extract_images_with_bbox_pymupdf(file_bytes, page_number):
 
             for rect in rects:
                 l, t, r, b = float(rect.x0), float(rect.y0), float(rect.x1), float(rect.y1)
+
+                # Generate unique image ID with page prefix
+                unique_image_id = f"p{page_number + 1}-img-{image_counter}"
+                image_counter += 1
+
                 images.append({
+                    "id": unique_image_id,  # ✅ Add unique ID
                     "type": "image",
                     "subtype": "embedded",
                     "box": {"l": l, "t": t, "r": r, "b": b},
@@ -249,7 +268,6 @@ def extract_images_with_bbox_pymupdf(file_bytes, page_number):
                     "image_b64": img_b64,
                 })
 
-    # print(f"[DEBUG] Page {page_number+1}: Found {len(images)} images (from xref rects)")
     return images
 
 
@@ -496,7 +514,7 @@ def parse_pdf():
 
         simplified = build_simplified_view_from_elements(structured)
         
-        with open("structured_output_v2.json", "w") as f:
+        with open("structured_output_v3.json", "w") as f:
             json.dump(structured, f, indent=2)
 
         # Debug preview
@@ -529,40 +547,50 @@ def _normalize(s: str) -> str:
 def _anchor_chunks_to_pdf(result_chunks, structured, image_bindings, source_filename):
     """
     Anchor AI result chunks back to PDF coordinates by matching text content.
-    Calculate proper bounding boxes for each chunk based on constituent lines.
-    Returns the modified chunks with anchoring metadata.
     """
     
     # Build searchable list of text lines from structured data
     pdf_lines = _pdf_lines_for_match(structured)
+    used_line_ids = set()  # ✅ Track used linesf
     
-    for chunk in result_chunks:
+    for chunk_idx, chunk in enumerate(result_chunks):
         chunk_text = chunk.get("text", "")
         if not chunk_text.strip():
             continue
             
         # Split chunk text into individual lines
-        chunk_lines = [line.strip() for line in chunk_text.split('\n') if line.strip()]
-        # Save the anchored result
-        with open("chunk_lines.json_V1.json", "w") as f:
-            json.dump(chunk_lines, f, indent=2)
-
-        
+        chunk_lines = [line.strip() for line in chunk_text.split('\n') if line.strip()]  
         
         # Find matching lines in structured output
         matched_lines = []
+        matched_line_ids = []
         start_idx = 0
         
         for chunk_line in chunk_lines:
-            match_result = _match_chunk_to_lines(chunk_line, pdf_lines, start_idx)
+            match_result = _match_chunk_to_lines_with_exclusion(
+                chunk_line, pdf_lines, start_idx, used_line_ids
+            )
             if match_result:
-                matched_idx, matched_line_list = match_result  # Now returns list of lines
-                matched_lines.extend(matched_line_list)  # Add all matched lines
-                start_idx = matched_idx + len(matched_line_list)  # Skip past all matched lines
+                matched_idx, matched_line_list = match_result
+                matched_lines.extend(matched_line_list)
+                
+                # Extract IDs and mark as used
+                for line in matched_line_list:
+                    line_id = line.get("id", "")
+                    if line_id:
+                        matched_line_ids.append(line_id)
+                        used_line_ids.add(line_id)  # ✅ Mark as used
+                
+                start_idx = matched_idx + len(matched_line_list)
                 print(f"[DEBUG] Matched chunk line '{chunk_line[:30]}...' to {len(matched_line_list)} PDF lines")
             else:
                 print(f"[WARN] Could not match chunk line: '{chunk_line[:50]}...'")
         
+        # ... rest of the function remains the same
+
+        # ✅ Generate unique chunk ID
+        chunk_id = f"chunk-{chunk_idx}-{str(uuid.uuid4())[:8]}"
+
         # Calculate encompassing bounding box from matched lines
         if matched_lines:
             chunk_box = _calculate_chunk_box(matched_lines)
@@ -570,12 +598,15 @@ def _anchor_chunks_to_pdf(result_chunks, structured, image_bindings, source_file
             # Add box and page info to chunk metadata
             if "metadata" not in chunk:
                 chunk["metadata"] = {}
-            
+
+            chunk["id"] = chunk_id  # ✅ Add unique ID to chunk root level
             chunk["metadata"]["box"] = chunk_box
             chunk["metadata"]["page"] = matched_lines[0].get("page", 1)
             chunk["metadata"]["source_file"] = source_filename
             chunk["metadata"]["line_count"] = len(matched_lines)
             chunk["metadata"]["anchored"] = True  # Flag to indicate successful anchoring
+            chunk["metadata"]["matched_line_ids"] = matched_line_ids  # ✅ Add line IDs
+            chunk["metadata"]["created_at"] = datetime.now().isoformat()
             
             print(f"[DEBUG] Anchored chunk: page={chunk['metadata']['page']}, "
                   f"lines={len(matched_lines)}, box={chunk_box}")
@@ -586,9 +617,127 @@ def _anchor_chunks_to_pdf(result_chunks, structured, image_bindings, source_file
             
             chunk["metadata"]["anchored"] = False
             chunk["metadata"]["source_file"] = source_filename
+            chunk["metadata"]["matched_line_ids"] = []  # ✅ Empty array for unanchored
+            chunk["metadata"]["created_at"] = datetime.now().isoformat()
             print(f"[WARN] No lines matched for chunk: '{chunk_text[:50]}...'")
     
     return result_chunks  # Return the modified chunks
+
+def _match_chunk_to_lines_with_exclusion(chunk_text, pdf_lines, start_idx=0, used_line_ids=None):
+    """
+    Enhanced matching that excludes already used lines to prevent overlap between chunks.
+    Always returns (index, [list_of_lines]) for consistency.
+    """
+    if used_line_ids is None:
+        used_line_ids = set()
+        
+    normalized_chunk = _normalize(chunk_text)
+    
+    print(f"[DEBUG] Matching chunk: '{chunk_text[:50]}...' (excluding {len(used_line_ids)} used lines)")
+    
+    # First try single line matches
+    for i in range(start_idx, len(pdf_lines)):
+        line = pdf_lines[i]
+        line_id = line.get("id", "")
+        
+        # ✅ Skip if line already used
+        if line_id in used_line_ids:
+            print(f"[DEBUG] Skipping already used line: {line_id}")
+            continue
+            
+        line_text = line.get("text", "")
+        normalized_line = _normalize(line_text)
+        
+        print(f"[DEBUG] Checking line {i} ({line_id}): '{line_text[:30]}...'")
+        
+        # Exact match
+        if normalized_chunk == normalized_line:
+            print(f"[DEBUG] EXACT MATCH found at line {i}")
+            return (i, [line])
+        
+        # Partial match (chunk text contained in line)
+        if normalized_chunk in normalized_line:
+            print(f"[DEBUG] PARTIAL MATCH found at line {i}")
+            return (i, [line])
+        
+        # More restrictive fuzzy match to prevent false positives
+        if len(normalized_chunk) > 15:  # Higher threshold
+            chunk_words = set(normalized_chunk.split())
+            line_words = set(normalized_line.split())
+            common_words = chunk_words & line_words
+            overlap_ratio = len(common_words) / len(chunk_words) if chunk_words else 0
+            
+            print(f"[DEBUG] Fuzzy match check: {len(common_words)}/{len(chunk_words)} = {overlap_ratio:.2f}")
+            
+            # More restrictive: 90% overlap AND significant word count
+            if (overlap_ratio >= 0.9 and len(common_words) >= 5):
+                print(f"[DEBUG] FUZZY MATCH found at line {i} (overlap: {overlap_ratio:.2f})")
+                return (i, [line])
+    
+    print(f"[DEBUG] No single line match found, trying multi-line...")
+    
+    # Multi-line matching with exclusion logic
+    for i in range(start_idx, len(pdf_lines) - 1):
+        line = pdf_lines[i]
+        line_id = line.get("id", "")
+        
+        # Skip if starting line is already used
+        if line_id in used_line_ids:
+            continue
+            
+        combined_lines = [line]
+        combined_text_parts = [line.get("text", "")]
+        
+        # Try combining with subsequent lines (up to 5 lines max)
+        for j in range(i + 1, min(i + 6, len(pdf_lines))):
+            next_line = pdf_lines[j]
+            next_line_id = next_line.get("id", "")
+            
+            # ✅ Skip if this line is already used
+            if next_line_id in used_line_ids:
+                print(f"[DEBUG] Skipping used line {next_line_id} in multi-line combination")
+                break
+                
+            # Check if lines are on the same page and vertically close
+            if (_lines_are_on_same_page(combined_lines[-1], next_line) and 
+                _lines_are_vertically_close(combined_lines[-1], next_line)):
+                
+                combined_lines.append(next_line)
+                combined_text_parts.append(next_line.get("text", ""))
+                
+                # Test if the combined text matches the chunk
+                combined_text = " ".join(combined_text_parts)
+                normalized_combined = _normalize(combined_text)
+                
+                print(f"[DEBUG] Testing {len(combined_lines)}-line combination")
+                
+                # Exact match with combined lines
+                if normalized_chunk == normalized_combined:
+                    print(f"[DEBUG] EXACT MULTI-LINE MATCH found starting at line {i}")
+                    return (i, combined_lines)
+                
+                # Partial match (chunk contained in combined text)
+                if normalized_chunk in normalized_combined:
+                    print(f"[DEBUG] PARTIAL MULTI-LINE MATCH found starting at line {i}")
+                    return (i, combined_lines)
+                
+                # Fuzzy match with combined text
+                if len(normalized_chunk) > 15:
+                    chunk_words = set(normalized_chunk.split())
+                    combined_words = set(normalized_combined.split())
+                    common_words = chunk_words & combined_words
+                    overlap_ratio = len(common_words) / len(chunk_words) if chunk_words else 0
+                    
+                    if overlap_ratio >= 0.9 and len(common_words) >= 5:
+                        print(f"[DEBUG] FUZZY MULTI-LINE MATCH found starting at line {i} (overlap: {overlap_ratio:.2f})")
+                        return (i, combined_lines)
+            else:
+                # Lines are too far apart, stop combining
+                print(f"[DEBUG] Lines too far apart, stopping combination at line {j}")
+                break
+    
+    print(f"[DEBUG] No match found for chunk: '{chunk_text[:50]}...'")
+    return None
 
 def _calculate_chunk_box(matched_lines):
     """
@@ -731,7 +880,7 @@ def _lines_are_vertically_close(line1, line2, threshold_multiplier=2.0):
         gap = line2_top - line1_bottom
         
         # Lines are close if gap is less than 2x average line height (more generous)
-        return gap < (avg_height * threshold_multiplier)
+        return gap < (avg_height * threshold_multiplier) if avg_height > 0 else False
     except (KeyError, TypeError, ZeroDivisionError):
         return False
     
@@ -800,7 +949,7 @@ def test_anchoring():
         }
         
         # Save the anchored result
-        with open("anchored_output_V5.json", "w") as f:
+        with open("anchored_output_V7.json", "w") as f:
             json.dump(result, f, indent=2)
         # print("[DEBUG] anchored_output.json created successfully")
         
