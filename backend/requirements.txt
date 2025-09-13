@@ -5,7 +5,6 @@ pdfplumber
 openai
 python-dotenv
 onnx
-tensorflow - Wrong download, dont
 PyMuPDF (fitz)
 pymupdf
 pprintpp
