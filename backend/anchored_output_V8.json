@@ -16,25 +16,23 @@
         "is_page_break": false,
         "siblings": [],
         "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.816366",
         "box": {
-          "l": 105.46835375,
-          "t": 97.68478525500007,
-          "r": 526.4996027899999,
-          "b": 222.295962484043
+          "l": 125.99667425,
+          "t": 73.89755514499996,
+          "r": 447.38511028108394,
+          "b": 223.00872473404297
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 5,
+        "line_count": 3,
         "anchored": true,
         "matched_line_ids": [
-          "p1-ln-2",
-          "p1-ln-3",
+          "p1-ln-0",
           "p1-ln-4",
-          "p1-ln-5",
-          "p1-ln-7"
-        ],
-        "created_at": "2025-09-15T02:13:57.728895"
+          "p1-ln-5"
+        ]
       },
-      "id": "chunk-0-8d16a9f9"
+      "id": "chunk-0-40286a55"
     },
     {
       "text": "Proponents: Section: 4ITD 1. Carla, Carlos Miguel M.\n2. Chua, Paul Andrew T.\n3. Hilario, Lance Joshua J.\n4. Joves, Josh Denziel S.\n5. Sapit III, Amado M.",
@@ -51,25 +49,25 @@
         "is_page_break": false,
         "siblings": [],
         "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.844208",
         "box": {
-          "l": 119.82932975,
-          "t": 233.0989229449999,
-          "r": 425.87620661,
-          "b": 302.76609846499997
+          "l": 120.858002,
+          "t": 234.00486261999993,
+          "r": 426.90487886,
+          "b": 305.61207066249995
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
         "line_count": 5,
         "anchored": true,
         "matched_line_ids": [
+          "p1-ln-6",
+          "p1-ln-7",
           "p1-ln-8",
           "p1-ln-9",
-          "p1-ln-10",
-          "p1-ln-11",
-          "p1-ln-12"
-        ],
-        "created_at": "2025-09-15T02:13:57.729988"
+          "p1-ln-10"
+        ]
       },
-      "id": "chunk-1-dc1d5f90"
+      "id": "chunk-1-8f36c477"
     },
     {
       "text": "Project Title: SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics",
@@ -87,21 +85,22 @@
         "is_page_break": false,
         "siblings": [],
         "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.845288",
         "box": {
           "l": 72.108002,
-          "t": 318.60972646999994,
-          "r": 513.06698636,
-          "b": 330.60972646999994
+          "t": 322.20569871999993,
+          "r": 513.81698636,
+          "b": 348.86606646999996
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 1,
+        "line_count": 2,
         "anchored": true,
         "matched_line_ids": [
-          "p1-ln-13"
-        ],
-        "created_at": "2025-09-15T02:13:57.731015"
+          "p1-ln-11",
+          "p1-ln-12"
+        ]
       },
-      "id": "chunk-2-8c35008f"
+      "id": "chunk-2-5ccbe0a2"
     },
     {
       "text": "Capstone Class Coordinator: Lintag, Leonid C.\nOral defense date: July 17, 2025",
@@ -118,22 +117,22 @@
         "is_page_break": false,
         "siblings": [],
         "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.846735",
         "box": {
-          "l": 72.108002,
-          "t": 357.31651419499997,
-          "r": 345.45370886,
-          "b": 393.56092854499997
+          "l": 72.858002,
+          "t": 361.87021956999996,
+          "r": 346.20370886,
+          "b": 398.85648569499995
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
         "line_count": 2,
         "anchored": true,
         "matched_line_ids": [
-          "p1-ln-15",
-          "p1-ln-16"
-        ],
-        "created_at": "2025-09-15T02:13:57.732453"
+          "p1-ln-13",
+          "p1-ln-14"
+        ]
       },
-      "id": "chunk-3-c6b50bab"
+      "id": "chunk-3-11052833"
     },
     {
       "text": "Capstone Project Scope and Limitations:\nScope and Limitations\nScope",
@@ -150,23 +149,23 @@
         "is_page_break": false,
         "siblings": [],
         "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.847390",
         "box": {
-          "l": 72.108002,
-          "t": 406.248583565957,
-          "r": 392.96842211891607,
-          "b": 456.65333671999997
+          "l": 72.858002,
+          "t": 411.889723690957,
+          "r": 393.71842211891607,
+          "b": 463.48105896999994
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
         "line_count": 3,
         "anchored": true,
         "matched_line_ids": [
-          "p1-ln-17",
-          "p1-ln-18",
-          "p1-ln-19"
-        ],
-        "created_at": "2025-09-15T02:13:57.733889"
+          "p1-ln-15",
+          "p1-ln-16",
+          "p1-ln-17"
+        ]
       },
-      "id": "chunk-4-98ef0361"
+      "id": "chunk-4-8e41fceb"
     },
     {
       "text": "This capstone project focuses on the development of SafexpressOps, a web based logistics support platform powered by Agentic Artificial Intelligence, specifically tailored to enhance the operational workflows of Safexpress Logistics Inc. The core components and features included within the project scope are:",
@@ -184,25 +183,25 @@
         "is_page_break": false,
         "siblings": [],
         "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.848211",
         "box": {
           "l": 144.108002,
-          "t": 472.35975797,
-          "r": 544.4908163599999,
-          "b": 595.26609947
+          "t": 479.56849221999994,
+          "r": 546.20761136,
+          "b": 602.36606947
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
         "line_count": 5,
         "anchored": true,
         "matched_line_ids": [
+          "p1-ln-18",
+          "p1-ln-19",
           "p1-ln-20",
           "p1-ln-21",
-          "p1-ln-22",
-          "p1-ln-23",
-          "p1-ln-24"
-        ],
-        "created_at": "2025-09-15T02:13:57.735370"
+          "p1-ln-22"
+        ]
       },
-      "id": "chunk-5-fa3197b6"
+      "id": "chunk-5-7a4aa375"
     },
     {
       "text": "AI Powered Knowledge Base\n- Consolidates manuals, company policies, warehouse-specific workflows, client requirements, and internal structures into a centralized database, accessible via a conversational AI assistant.",
@@ -219,24 +218,21 @@
         "is_page_break": true,
         "siblings": [],
         "page": 1,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.849664",
         "box": {
           "l": 179.358002,
-          "t": 610.6722709395215,
-          "r": 544.357327230542,
-          "b": 692.6722742970214
+          "t": 620.5019923220215,
+          "r": 322.11594723054196,
+          "b": 630.5019920720215
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 4,
+        "line_count": 1,
         "anchored": true,
         "matched_line_ids": [
-          "p1-ln-25",
-          "p1-ln-26",
-          "p1-ln-27",
-          "p1-ln-28"
-        ],
-        "created_at": "2025-09-15T02:13:57.736819"
+          "p1-ln-23"
+        ]
       },
-      "id": "chunk-6-173fcd9e"
+      "id": "chunk-6-57e7c8c6"
     },
     {
       "text": "Weaviate vector database is used in the construction of the centralized knowledge base. OpenAI's text-embedding-ada-002 model is used to index all documents by translating their text into numerical representations. When a user searches, the most contextually relevant content is found by ranking relevance using cosine similarity. The system employs version control for any modified documents, detects and flags duplicate source files upon upload, and has automated data cleanup functions to preserve data integrity.",
@@ -254,11 +250,29 @@
         "is_page_break": false,
         "siblings": [],
         "page": 2,
-        "anchored": false,
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "matched_line_ids": [],
-        "created_at": "2025-09-15T02:13:57.754501"
-      }
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.853686",
+        "box": {
+          "l": 216.108002,
+          "t": 95.77224193952145,
+          "r": 546.6357297305419,
+          "b": 291.7722398145214
+        },
+        "line_count": 9,
+        "anchored": true,
+        "matched_line_ids": [
+          "p2-ln-1",
+          "p2-ln-2",
+          "p2-ln-3",
+          "p2-ln-4",
+          "p2-ln-5",
+          "p2-ln-6",
+          "p2-ln-7",
+          "p2-ln-8",
+          "p2-ln-9"
+        ]
+      },
+      "id": "chunk-7-e7b2057a"
     },
     {
       "text": "Limitations\nThis project aims to provide significant automation and intelligent support; however, there are some limitations to be acknowledged:",
@@ -274,22 +288,24 @@
         "is_page_break": false,
         "siblings": [],
         "page": 2,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.855671",
         "box": {
-          "l": 143.358002,
-          "t": 295.12089647,
-          "r": 495.58846886000003,
-          "b": 362.76609947
+          "l": 144.108002,
+          "t": 320.10364746999994,
+          "r": 499.47909386000003,
+          "b": 416.36606646999996
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 2,
+        "line_count": 4,
         "anchored": true,
         "matched_line_ids": [
           "p2-ln-10",
-          "p2-ln-12"
-        ],
-        "created_at": "2025-09-15T02:13:57.756433"
+          "p2-ln-11",
+          "p2-ln-12",
+          "p2-ln-13"
+        ]
       },
-      "id": "chunk-8-2ff4e98a"
+      "id": "chunk-8-542825f5"
     },
     {
       "text": "a. Agent Personal Assistant features will not be available to all users during the initial version. Token consumption will be monitored, and access will be allocated only to users who critically require the functionality.",
@@ -306,23 +322,24 @@
         "is_page_break": false,
         "siblings": [],
         "page": 2,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.856873",
         "box": {
-          "l": 139.608002,
-          "t": 418.87089647,
-          "r": 544.1568338600001,
-          "b": 486.51609947
+          "l": 140.358002,
+          "t": 447.39005496999994,
+          "r": 546.4068338600001,
+          "b": 542.36606647
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 3,
+        "line_count": 4,
         "anchored": true,
         "matched_line_ids": [
           "p2-ln-14",
           "p2-ln-15",
-          "p2-ln-16"
-        ],
-        "created_at": "2025-09-15T02:13:57.758642"
+          "p2-ln-16",
+          "p2-ln-17"
+        ]
       },
-      "id": "chunk-9-9aa93d59"
+      "id": "chunk-9-f550f82e"
     },
     {
       "text": "b. Testing data access will be limited to up to six (6) months, depending on data volume, or all will be dummy data. This is to avoid exceeding usage limits under the free-tier plan, prevent undue financial burden on the student developers currently working on the system, and protect their sensitive data.",
@@ -339,26 +356,25 @@
         "is_page_break": true,
         "siblings": [],
         "page": 2,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.857886",
         "box": {
-          "l": 139.608002,
-          "t": 502.26609947,
-          "r": 544.4439413600002,
-          "b": 655.2660950449999
+          "l": 140.358002,
+          "t": 606.06080137,
+          "r": 546.4068338600001,
+          "b": 112.61594746499998
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 6,
+        "line_count": 5,
         "anchored": true,
         "matched_line_ids": [
-          "p2-ln-17",
-          "p2-ln-18",
           "p2-ln-19",
           "p2-ln-20",
           "p2-ln-21",
-          "p2-ln-22"
-        ],
-        "created_at": "2025-09-15T02:13:57.760753"
+          "p3-ln-0",
+          "p3-ln-1"
+        ]
       },
-      "id": "chunk-10-a10d40a7"
+      "id": "chunk-10-1a4f89f5"
     },
     {
       "text": "PROGRAM: | Bachelors of Science on Information Technology\nDEFENSE DATE: | July 17, 2025\nTITLE: | SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics\nMEMBERS: | 1. Carla, Carlos Miguel M.\n | 2. Chua, Paul Andrew T.\n | 3. Hilario, Lance Joshua J.\n4. Joves, Josh Denziel S.",
@@ -375,11 +391,17 @@
         "is_page_break": false,
         "siblings": [],
         "page": 3,
-        "anchored": false,
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "matched_line_ids": [],
-        "created_at": "2025-09-15T02:13:57.782055"
-      }
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.858988",
+        "box": {
+          "b": 439.499875,
+          "l": 71.50000025,
+          "r": 551.4999995000001,
+          "t": 222.49987941999996
+        },
+        "anchored": true
+      },
+      "id": "chunk-11-6c694bd0"
     },
     {
       "text": "ADVISER: Mr. Sapit, Amado M. III\nThis is to verify that the objectives, scope, and limitations have been approved for Capstone Project development in IT 2621 1 (IT Capstone Project 2).",
@@ -396,22 +418,21 @@
         "is_page_break": true,
         "siblings": [],
         "page": 3,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.860701",
         "box": {
-          "l": 72.108002,
-          "t": 469.40330522,
-          "r": 543.5533163600002,
-          "b": 545.80401647
+          "l": 113.358002,
+          "t": 472.615948465,
+          "r": 308.04745886,
+          "b": 484.615948465
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 2,
+        "line_count": 1,
         "anchored": true,
         "matched_line_ids": [
-          "p3-ln-14",
-          "p3-ln-17"
-        ],
-        "created_at": "2025-09-15T02:13:57.782992"
+          "p3-ln-14"
+        ]
       },
-      "id": "chunk-12-59dd521d"
+      "id": "chunk-12-2c86087e"
     },
     {
       "text": "Capstone Project Oral Defense Panel: Signature/Date 1. Zhuo, Eugenia R.\n2. Estrella, Noel E.\n3. Domingo, Mylene J.\nVerified by: Noted by:\nSapit III, Amado M. Lintag, Leonid C. Technical Adviser Capstone Class Coordinator Date: ________________ Date: ________________",
@@ -428,25 +449,26 @@
         "is_page_break": false,
         "siblings": [],
         "page": 4,
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.862153",
         "box": {
           "l": 72.108002,
-          "t": 378.60438722,
-          "r": 496.87167386,
-          "b": 464.04429722
+          "t": 336.75101901999994,
+          "r": 494.28769136000005,
+          "b": 438.115948465
         },
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "line_count": 5,
+        "line_count": 6,
         "anchored": true,
         "matched_line_ids": [
+          "p4-ln-1",
           "p4-ln-2",
           "p4-ln-3",
           "p4-ln-4",
           "p4-ln-5",
           "p4-ln-6"
-        ],
-        "created_at": "2025-09-15T02:13:57.784381"
+        ]
       },
-      "id": "chunk-13-76be6719"
+      "id": "chunk-13-338b3640"
     },
     {
       "text": "Image of a university ID card.",
@@ -463,19 +485,25 @@
         "is_page_break": false,
         "siblings": [],
         "page": 4,
-        "anchored": false,
-        "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-        "matched_line_ids": [],
-        "created_at": "2025-09-15T02:13:57.785656"
-      }
+        "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+        "created_at": "2025-09-15T07:35:50.863347",
+        "box": {
+          "b": 330.302978515625,
+          "l": 75.10800170898438,
+          "r": 395.3580017089844,
+          "t": 72.302978515625
+        },
+        "anchored": true
+      },
+      "id": "chunk-14-c5bc16d3"
     }
   ],
   "document_metadata": {
-    "source_file": "GROUP 3 VALIDATION FORM (1) (3).pdf",
-    "processed_date": "2025-09-15T02:13:57.785790",
+    "source_file": "GROUP 3 VALIDATION FORM (1) (3) (1).pdf",
+    "processed_date": "2025-09-15T07:35:50.863694",
     "total_chunks": 15,
     "processing_version": "1.0",
-    "anchored_chunks": 12,
-    "unanchored_chunks": 3
+    "anchored_chunks": 15,
+    "unanchored_chunks": 0
   }
 }

@@ -552,197 +552,260 @@ def _anchor_chunks_to_pdf(result_chunks, structured, image_bindings, source_file
     # Build searchable list of text lines from structured data
     pdf_lines = _pdf_lines_for_match(structured)
     used_line_ids = set()  # ✅ Track used linesf
+   
+    # Create lookup for tables and images by page
+    tables_by_page = {}
+    images_by_page = {}
     
+    for element in structured:
+        page = element.get("page", 1)
+        if element.get("type") == "table":
+            if page not in tables_by_page:
+                tables_by_page[page] = []
+            tables_by_page[page].append(element)
+        elif element.get("type") == "image":
+            if page not in images_by_page:
+                images_by_page[page] = []
+            images_by_page[page].append(element)
+
     for chunk_idx, chunk in enumerate(result_chunks):
         chunk_text = chunk.get("text", "")
+        chunk_type = chunk.get("metadata", {}).get("type", "")
+        chunk_page = chunk.get("metadata", {}).get("page", 1)
+
         if not chunk_text.strip():
             continue
             
-        # Split chunk text into individual lines
-        chunk_lines = [line.strip() for line in chunk_text.split('\n') if line.strip()]  
-        
-        # Find matching lines in structured output
-        matched_lines = []
-        matched_line_ids = []
-        start_idx = 0
-        
-        for chunk_line in chunk_lines:
-            match_result = _match_chunk_to_lines_with_exclusion(
-                chunk_line, pdf_lines, start_idx, used_line_ids
-            )
-            if match_result:
-                matched_idx, matched_line_list = match_result
-                matched_lines.extend(matched_line_list)
-                
-                # Extract IDs and mark as used
-                for line in matched_line_list:
-                    line_id = line.get("id", "")
-                    if line_id:
-                        matched_line_ids.append(line_id)
-                        used_line_ids.add(line_id)  # ✅ Mark as used
-                
-                start_idx = matched_idx + len(matched_line_list)
-                print(f"[DEBUG] Matched chunk line '{chunk_line[:30]}...' to {len(matched_line_list)} PDF lines")
-            else:
-                print(f"[WARN] Could not match chunk line: '{chunk_line[:50]}...'")
-        
-        # ... rest of the function remains the same
-
         # ✅ Generate unique chunk ID
         chunk_id = f"chunk-{chunk_idx}-{str(uuid.uuid4())[:8]}"
-
-        # Calculate encompassing bounding box from matched lines
-        if matched_lines:
-            chunk_box = _calculate_chunk_box(matched_lines)
+        
+        # Initialize metadata if not present
+        if "metadata" not in chunk:
+            chunk["metadata"] = {}
             
-            # Add box and page info to chunk metadata
-            if "metadata" not in chunk:
-                chunk["metadata"] = {}
-
-            chunk["id"] = chunk_id  # ✅ Add unique ID to chunk root level
-            chunk["metadata"]["box"] = chunk_box
-            chunk["metadata"]["page"] = matched_lines[0].get("page", 1)
-            chunk["metadata"]["source_file"] = source_filename
-            chunk["metadata"]["line_count"] = len(matched_lines)
-            chunk["metadata"]["anchored"] = True  # Flag to indicate successful anchoring
-            chunk["metadata"]["matched_line_ids"] = matched_line_ids  # ✅ Add line IDs
-            chunk["metadata"]["created_at"] = datetime.now().isoformat()
-            
-            print(f"[DEBUG] Anchored chunk: page={chunk['metadata']['page']}, "
-                  f"lines={len(matched_lines)}, box={chunk_box}")
+        chunk["id"] = chunk_id  # ✅ Add unique ID to chunk root level
+        chunk["metadata"]["source_file"] = source_filename
+        chunk["metadata"]["created_at"] = datetime.now().isoformat()
+        
+        # Handle different content types
+        if chunk_type == "table":
+            print(f"[DEBUG] Processing table chunk on page {chunk_page}")
+            # Find matching table in structured data by page
+            if chunk_page in tables_by_page:
+                # Take the first available table on that page (you could improve matching logic)
+                table_element = tables_by_page[chunk_page][0]  # Simple approach
+                
+                # Copy the box coordinates directly from structured data
+                chunk["metadata"]["box"] = table_element.get("box", {})
+                chunk["metadata"]["page"] = table_element.get("page", chunk_page)
+                chunk["metadata"]["anchored"] = True
+                print(f"[DEBUG] Anchored table: page={chunk['metadata']['page']}, box={chunk['metadata']['box']}")
+            else:
+                chunk["metadata"]["anchored"] = False
+                print(f"[WARN] No table found on page {chunk_page}")
+                
+        elif chunk_type == "image":
+            print(f"[DEBUG] Processing image chunk on page {chunk_page}")
+            # Find matching image in structured data by page
+            if chunk_page in images_by_page:
+                # Take the first available image on that page (you could improve matching logic)
+                image_element = images_by_page[chunk_page][0]  # Simple approach
+                
+                # Copy the box coordinates directly from structured data
+                chunk["metadata"]["box"] = image_element.get("box", {})
+                chunk["metadata"]["page"] = image_element.get("page", chunk_page)
+                chunk["metadata"]["anchored"] = True
+                print(f"[DEBUG] Anchored image: page={chunk['metadata']['page']}, box={chunk['metadata']['box']}")
+            else:
+                chunk["metadata"]["anchored"] = False
+                print(f"[WARN] No image found on page {chunk_page}")
+                
         else:
-            # Mark as unanchored but still add metadata structure
-            if "metadata" not in chunk:
-                chunk["metadata"] = {}
+            # ✅ PRESERVE ALL YOUR EXISTING LINE-BY-LINE LOGIC
+            # Split chunk text into individual lines
+            chunk_lines = [line.strip() for line in chunk_text.split('\n') if line.strip()]  
             
-            chunk["metadata"]["anchored"] = False
-            chunk["metadata"]["source_file"] = source_filename
-            chunk["metadata"]["matched_line_ids"] = []  # ✅ Empty array for unanchored
-            chunk["metadata"]["created_at"] = datetime.now().isoformat()
-            print(f"[WARN] No lines matched for chunk: '{chunk_text[:50]}...'")
+            # Find matching lines in structured output
+            matched_lines = []
+            matched_line_ids = []
+            start_idx = 0
+            
+            for chunk_line in chunk_lines:
+                match_result = _match_chunk_to_lines_with_exclusion(
+                    chunk_line, pdf_lines, start_idx, used_line_ids
+                )
+                if match_result:
+                    matched_idx, matched_line_list = match_result
+                    matched_lines.extend(matched_line_list)
+                    
+                    # Extract IDs and mark as used
+                    for line in matched_line_list:
+                        line_id = line.get("id", "")
+                        if line_id:
+                            matched_line_ids.append(line_id)
+                            used_line_ids.add(line_id)  # ✅ Mark as used
+                    
+                    start_idx = matched_idx + len(matched_line_list)
+                    print(f"[DEBUG] Matched chunk line '{chunk_line[:30]}...' to {len(matched_line_list)} PDF lines")
+                else:
+                    print(f"[WARN] Could not match chunk line: '{chunk_line[:50]}...'")
+
+            # Calculate encompassing bounding box from matched lines
+            if matched_lines:
+                chunk_box = _calculate_chunk_box(matched_lines)
+                
+                # Add box and page info to chunk metadata
+                chunk["metadata"]["box"] = chunk_box
+                chunk["metadata"]["page"] = matched_lines[0].get("page", 1)
+                chunk["metadata"]["line_count"] = len(matched_lines)
+                chunk["metadata"]["anchored"] = True  # Flag to indicate successful anchoring
+                chunk["metadata"]["matched_line_ids"] = matched_line_ids  # ✅ Add line IDs
+                
+                print(f"[DEBUG] Anchored text chunk: page={chunk['metadata']['page']}, "
+                      f"lines={len(matched_lines)}, box={chunk_box}")
+            else:
+                # Mark as unanchored but still add metadata structure
+                chunk["metadata"]["anchored"] = False
+                chunk["metadata"]["matched_line_ids"] = []  # ✅ Empty array for unanchored
+                print(f"[WARN] No lines matched for chunk: '{chunk_text[:50]}...'")
     
     return result_chunks  # Return the modified chunks
 
 def _match_chunk_to_lines_with_exclusion(chunk_text, pdf_lines, start_idx=0, used_line_ids=None):
     """
-    Enhanced matching that excludes already used lines to prevent overlap between chunks.
-    Always returns (index, [list_of_lines]) for consistency.
+    Enhanced matching that finds the BEST multi-line match, including cross-page spans.
     """
     if used_line_ids is None:
         used_line_ids = set()
         
     normalized_chunk = _normalize(chunk_text)
     
-    print(f"[DEBUG] Matching chunk: '{chunk_text[:50]}...' (excluding {len(used_line_ids)} used lines)")
-    
-    # First try single line matches
+    # 1. Try single line matches first (exact only)
     for i in range(start_idx, len(pdf_lines)):
         line = pdf_lines[i]
         line_id = line.get("id", "")
         
-        # ✅ Skip if line already used
         if line_id in used_line_ids:
-            print(f"[DEBUG] Skipping already used line: {line_id}")
             continue
             
         line_text = line.get("text", "")
         normalized_line = _normalize(line_text)
         
-        print(f"[DEBUG] Checking line {i} ({line_id}): '{line_text[:30]}...'")
-        
-        # Exact match
+        # EXACT match only
         if normalized_chunk == normalized_line:
-            print(f"[DEBUG] EXACT MATCH found at line {i}")
             return (i, [line])
-        
-        # Partial match (chunk text contained in line)
-        if normalized_chunk in normalized_line:
-            print(f"[DEBUG] PARTIAL MATCH found at line {i}")
-            return (i, [line])
-        
-        # More restrictive fuzzy match to prevent false positives
-        if len(normalized_chunk) > 15:  # Higher threshold
-            chunk_words = set(normalized_chunk.split())
-            line_words = set(normalized_line.split())
-            common_words = chunk_words & line_words
-            overlap_ratio = len(common_words) / len(chunk_words) if chunk_words else 0
-            
-            print(f"[DEBUG] Fuzzy match check: {len(common_words)}/{len(chunk_words)} = {overlap_ratio:.2f}")
-            
-            # More restrictive: 90% overlap AND significant word count
-            if (overlap_ratio >= 0.9 and len(common_words) >= 5):
-                print(f"[DEBUG] FUZZY MATCH found at line {i} (overlap: {overlap_ratio:.2f})")
-                return (i, [line])
     
-    print(f"[DEBUG] No single line match found, trying multi-line...")
+    # 2. Multi-line matching with cross-page support
+    best_match = None
+    best_score = 0
     
-    # Multi-line matching with exclusion logic
     for i in range(start_idx, len(pdf_lines) - 1):
         line = pdf_lines[i]
         line_id = line.get("id", "")
         
-        # Skip if starting line is already used
         if line_id in used_line_ids:
             continue
             
+        # Try combining with subsequent lines (increased search window for cross-page)
         combined_lines = [line]
         combined_text_parts = [line.get("text", "")]
         
-        # Try combining with subsequent lines (up to 5 lines max)
-        for j in range(i + 1, min(i + 6, len(pdf_lines))):
+        for j in range(i + 1, min(i + 20, len(pdf_lines))):  # ✅ Increased from 12 to 20
             next_line = pdf_lines[j]
             next_line_id = next_line.get("id", "")
             
-            # ✅ Skip if this line is already used
             if next_line_id in used_line_ids:
-                print(f"[DEBUG] Skipping used line {next_line_id} in multi-line combination")
                 break
                 
-            # Check if lines are on the same page and vertically close
-            if (_lines_are_on_same_page(combined_lines[-1], next_line) and 
-                _lines_are_vertically_close(combined_lines[-1], next_line)):
+            # ✅ Enhanced proximity check for cross-page spans
+            if not _lines_are_continuous(combined_lines[-1], next_line):
+                # Don't break immediately - check if it's a page break continuation
+                if not _is_page_break_continuation(combined_lines[-1], next_line):
+                    break
+            
+            # Add line to combination
+            combined_lines.append(next_line)
+            combined_text_parts.append(next_line.get("text", ""))
+            
+            # Test combined text
+            combined_text = " ".join(combined_text_parts)
+            normalized_combined = _normalize(combined_text)
+            
+            # Calculate match quality
+            match_score = _calculate_match_score(normalized_chunk, normalized_combined)
+            
+            # Update best match if this is better
+            if match_score > best_score:
+                best_match = (i, combined_lines.copy())
+                best_score = match_score
                 
-                combined_lines.append(next_line)
-                combined_text_parts.append(next_line.get("text", ""))
-                
-                # Test if the combined text matches the chunk
-                combined_text = " ".join(combined_text_parts)
-                normalized_combined = _normalize(combined_text)
-                
-                print(f"[DEBUG] Testing {len(combined_lines)}-line combination")
-                
-                # Exact match with combined lines
-                if normalized_chunk == normalized_combined:
-                    print(f"[DEBUG] EXACT MULTI-LINE MATCH found starting at line {i}")
-                    return (i, combined_lines)
-                
-                # Partial match (chunk contained in combined text)
-                if normalized_chunk in normalized_combined:
-                    print(f"[DEBUG] PARTIAL MULTI-LINE MATCH found starting at line {i}")
-                    return (i, combined_lines)
-                
-                # Fuzzy match with combined text
-                if len(normalized_chunk) > 15:
-                    chunk_words = set(normalized_chunk.split())
-                    combined_words = set(normalized_combined.split())
-                    common_words = chunk_words & combined_words
-                    overlap_ratio = len(common_words) / len(chunk_words) if chunk_words else 0
-                    
-                    if overlap_ratio >= 0.9 and len(common_words) >= 5:
-                        print(f"[DEBUG] FUZZY MULTI-LINE MATCH found starting at line {i} (overlap: {overlap_ratio:.2f})")
-                        return (i, combined_lines)
-            else:
-                # Lines are too far apart, stop combining
-                print(f"[DEBUG] Lines too far apart, stopping combination at line {j}")
-                break
+                # If we have a perfect match, we can return immediately
+                if match_score >= 100:  # Perfect match
+                    return best_match
     
-    print(f"[DEBUG] No match found for chunk: '{chunk_text[:50]}...'")
+    # Return the best match found, if any
+    if best_match and best_score >= 80:  # Minimum 80% match required
+        return best_match
+    
     return None
+
+def _is_page_break_continuation(line1, line2):
+    """
+    Check if line2 is a continuation of line1 across a page break.
+    This handles cases where text flows from the bottom of one page to the top of the next.
+    """
+    try:
+        page1 = line1.get("page", 1)
+        page2 = line2.get("page", 1)
+        
+        # Must be consecutive pages
+        if page2 != page1 + 1:
+            return False
+        
+        # Line1 should be near the bottom of its page
+        line1_box = line1.get("box", {})
+        page1_height = line1.get("page_height", 792)  # Default PDF height
+        line1_bottom = line1_box.get("b", 0)
+        
+        # Line2 should be near the top of its page
+        line2_box = line2.get("box", {})
+        line2_top = line2_box.get("t", 0)
+        
+        # Check if line1 is in bottom portion of page (last 20% of page)
+        bottom_threshold = page1_height * 0.8
+        is_line1_near_bottom = line1_bottom > bottom_threshold
+        
+        # Check if line2 is in top portion of page (first 20% of page)
+        top_threshold = page1_height * 0.2
+        is_line2_near_top = line2_top < top_threshold
+        
+        # Check horizontal alignment (similar indentation)
+        line1_indent = line1.get("indent", line1_box.get("l", 0))
+        line2_indent = line2.get("indent", line2_box.get("l", 0))
+        indent_diff = abs(line1_indent - line2_indent)
+        
+        # Allow for reasonable indent variation (within 20 pixels)
+        similar_indent = indent_diff < 20
+        
+        return is_line1_near_bottom and is_line2_near_top and similar_indent
+        
+    except (KeyError, TypeError, AttributeError):
+        return False
+
+def _lines_are_continuous(line1, line2):
+    """
+    Enhanced version that checks both same-page proximity and cross-page continuation.
+    """
+    # Same page check
+    if _lines_are_on_same_page(line1, line2):
+        return _lines_are_vertically_close(line1, line2, threshold_multiplier=2.0)
+    
+    # Cross-page check
+    return _is_page_break_continuation(line1, line2)
 
 def _calculate_chunk_box(matched_lines):
     """
-    Calculate bounding box that encompasses all matched lines.
-    Returns box dict with l, t, r, b coordinates.
+    Enhanced version that handles cross-page bounding boxes correctly.
     """
     if not matched_lines:
         return {"l": 0, "t": 0, "r": 0, "b": 0}
@@ -751,10 +814,8 @@ def _calculate_chunk_box(matched_lines):
     flattened_lines = []
     for item in matched_lines:
         if isinstance(item, list):
-            # If item is a list of lines (from multi-line matching)
             flattened_lines.extend(item)
         else:
-            # If item is a single line object
             flattened_lines.append(item)
 
     # Get all line boxes
@@ -766,18 +827,37 @@ def _calculate_chunk_box(matched_lines):
     if not line_boxes:
         return {"l": 0, "t": 0, "r": 0, "b": 0}
     
-    # Calculate encompassing box
-    # t: top of first line (smallest t value)
-    top = min(box.get("t", 0) for box in line_boxes)
+    # ✅ Group boxes by page for cross-page handling
+    boxes_by_page = {}
+    for i, line in enumerate(flattened_lines):
+        page = line.get("page", 1)
+        boxes_by_page.setdefault(page, []).append((line_boxes[i], line))
     
-    # b: bottom of last line (largest b value) 
-    bottom = max(box.get("b", 0) for box in line_boxes)
-    
-    # l: leftmost position (smallest l value)
-    left = min(box.get("l", 0) for box in line_boxes)
-    
-    # r: rightmost position (largest r value)
-    right = max(box.get("r", 0) for box in line_boxes)
+    # ✅ Calculate bounds considering page structure
+    if len(boxes_by_page) == 1:
+        # Single page - use existing logic
+        line_boxes.sort(key=lambda box: box.get("t", 0))
+        top = line_boxes[0].get("t", 0)
+        bottom = line_boxes[-1].get("b", 0)
+        left = min(box.get("l", 0) for box in line_boxes)
+        right = max(box.get("r", 0) for box in line_boxes)
+    else:
+        # Cross-page - use first line's top and last line's bottom
+        first_page = min(boxes_by_page.keys())
+        last_page = max(boxes_by_page.keys())
+        
+        # Top from first page's first line
+        first_page_boxes = sorted(boxes_by_page[first_page], key=lambda x: x[0].get("t", 0))
+        top = first_page_boxes[0][0].get("t", 0)
+        
+        # Bottom from last page's last line  
+        last_page_boxes = sorted(boxes_by_page[last_page], key=lambda x: x[0].get("t", 0))
+        bottom = last_page_boxes[-1][0].get("b", 0)
+        
+        # Left and right from all boxes
+        all_boxes = [box for box, _ in sum(boxes_by_page.values(), [])]
+        left = min(box.get("l", 0) for box in all_boxes)
+        right = max(box.get("r", 0) for box in all_boxes)
     
     return {
         "l": left,
@@ -786,74 +866,159 @@ def _calculate_chunk_box(matched_lines):
         "b": bottom
     }
 
-def _match_chunk_to_lines(chunk_text, pdf_lines, start_idx=0):
+def _calculate_match_score(chunk_text, combined_text):
     """
-    Enhanced matching with multi-line support that returns both index and full line objects.
-    Combines consecutive lines when needed to match chunks that span multiple lines.
-    Always returns (index, [list_of_lines]) for consistency.
+    Calculate match score between chunk and combined text.
+    Returns score from 0-100.
     """
-    normalized_chunk = _normalize(chunk_text)
+    if not chunk_text or not combined_text:
+        return 0
     
-    # First try single line matches
-    for i in range(start_idx, len(pdf_lines)):
-        line = pdf_lines[i]
-        line_text = line.get("text", "")
-        normalized_line = _normalize(line_text)
-        
-        # Exact match
-        if normalized_chunk == normalized_line:
-            return (i, [line])
-        
-        # Partial match (chunk text contained in line)
-        if normalized_chunk in normalized_line:
-            return (i, [line])
-        
-        # Fuzzy match for minor differences
-        if len(normalized_chunk) > 10:  # Only for substantial text
-            common_words = set(normalized_chunk.split()) & set(normalized_line.split())
-            if len(common_words) >= len(normalized_chunk.split()) * 0.8:  # 80% word overlap
-                return (i, [line])
+    # Exact match = 100%
+    if chunk_text == combined_text:
+        return 100
     
-    # If no single line match, try multi-line matching
-    for i in range(start_idx, len(pdf_lines) - 1):  # -1 because we need at least 2 lines
-        combined_lines = [pdf_lines[i]]
-        combined_text_parts = [pdf_lines[i].get("text", "")]
+    # Containment matches
+    if chunk_text in combined_text:
+        # Score based on how much of combined text is the chunk
+        return int((len(chunk_text) / len(combined_text)) * 95)
+    
+    if combined_text in chunk_text:
+        # Score based on how much of chunk is covered
+        return int((len(combined_text) / len(chunk_text)) * 90)
+    
+    # Word-based similarity for partial matches
+    chunk_words = set(chunk_text.split())
+    combined_words = set(combined_text.split())
+    
+    if not chunk_words:
+        return 0
+    
+    intersection = chunk_words & combined_words
+    union = chunk_words | combined_words
+    
+    # Jaccard similarity * 85 (max score for word-based match)
+    similarity = len(intersection) / len(union) if union else 0
+    return int(similarity * 85)
+
+# def _calculate_chunk_box(matched_lines):
+#     """
+#     Calculate bounding box that encompasses all matched lines.
+#     Returns box dict with l, t, r, b coordinates.
+#     """
+#     if not matched_lines:
+#         return {"l": 0, "t": 0, "r": 0, "b": 0}
+    
+#     # Flatten the matched_lines list in case it contains nested lists
+#     flattened_lines = []
+#     for item in matched_lines:
+#         if isinstance(item, list):
+#             # If item is a list of lines (from multi-line matching)
+#             flattened_lines.extend(item)
+#         else:
+#             # If item is a single line object
+#             flattened_lines.append(item)
+
+#     # Get all line boxes
+#     line_boxes = []
+#     for line in flattened_lines:
+#         if isinstance(line, dict) and "box" in line and line["box"]:
+#             line_boxes.append(line["box"])
+    
+#     if not line_boxes:
+#         return {"l": 0, "t": 0, "r": 0, "b": 0}
+    
+#     # ✅ Sort boxes by top coordinate to ensure proper order
+#     line_boxes.sort(key=lambda box: box.get("t", 0))
+
+#     # Calculate encompassing box
+#     # t: top of first line (smallest t value)
+#     top = line_boxes[0].get("t", 0)
+    
+#     # b: bottom of last line (largest b value) 
+#     bottom = line_boxes[-1].get("b", 0)
+    
+#     # l: leftmost position (smallest l value)
+#     left = min(box.get("l", 0) for box in line_boxes)
+    
+#     # r: rightmost position (largest r value)
+#     right = max(box.get("r", 0) for box in line_boxes)
+    
+#     return {
+#         "l": left,
+#         "t": top, 
+#         "r": right,
+#         "b": bottom
+#     }
+
+# def _match_chunk_to_lines(chunk_text, pdf_lines, start_idx=0):
+#     """
+#     Enhanced matching with multi-line support that returns both index and full line objects.
+#     Combines consecutive lines when needed to match chunks that span multiple lines.
+#     Always returns (index, [list_of_lines]) for consistency.
+#     """
+#     normalized_chunk = _normalize(chunk_text)
+    
+#     # First try single line matches
+#     for i in range(start_idx, len(pdf_lines)):
+#         line = pdf_lines[i]
+#         line_text = line.get("text", "")
+#         normalized_line = _normalize(line_text)
         
-        # Try combining with subsequent lines (up to 5 lines max)
-        for j in range(i + 1, min(i + 6, len(pdf_lines))):
-            next_line = pdf_lines[j]
+#         # Exact match
+#         if normalized_chunk == normalized_line:
+#             return (i, [line])
+        
+#         # Partial match (chunk text contained in line)
+#         if normalized_chunk in normalized_line:
+#             return (i, [line])
+        
+#         # Fuzzy match for minor differences
+#         if len(normalized_chunk) > 10:  # Only for substantial text
+#             common_words = set(normalized_chunk.split()) & set(normalized_line.split())
+#             if len(common_words) >= len(normalized_chunk.split()) * 0.8:  # 80% word overlap
+#                 return (i, [line])
+    
+#     # If no single line match, try multi-line matching
+#     for i in range(start_idx, len(pdf_lines) - 1):  # -1 because we need at least 2 lines
+#         combined_lines = [pdf_lines[i]]
+#         combined_text_parts = [pdf_lines[i].get("text", "")]
+        
+#         # Try combining with subsequent lines (up to 5 lines max)
+#         for j in range(i + 1, min(i + 6, len(pdf_lines))):
+#             next_line = pdf_lines[j]
             
-            # Check if lines are on the same page and vertically close
-            if (_lines_are_on_same_page(combined_lines[-1], next_line) and 
-                _lines_are_vertically_close(combined_lines[-1], next_line)):
+#             # Check if lines are on the same page and vertically close
+#             if (_lines_are_on_same_page(combined_lines[-1], next_line) and 
+#                 _lines_are_vertically_close(combined_lines[-1], next_line)):
                 
-                combined_lines.append(next_line)
-                combined_text_parts.append(next_line.get("text", ""))
+#                 combined_lines.append(next_line)
+#                 combined_text_parts.append(next_line.get("text", ""))
                 
-                # Test if the combined text matches the chunk
-                combined_text = " ".join(combined_text_parts)
-                normalized_combined = _normalize(combined_text)
+#                 # Test if the combined text matches the chunk
+#                 combined_text = " ".join(combined_text_parts)
+#                 normalized_combined = _normalize(combined_text)
                 
-                # Exact match with combined lines
-                if normalized_chunk == normalized_combined:
-                    return (i, combined_lines)
+#                 # Exact match with combined lines
+#                 if normalized_chunk == normalized_combined:
+#                     return (i, combined_lines)
                 
-                # Partial match (chunk contained in combined text)
-                if normalized_chunk in normalized_combined:
-                    return (i, combined_lines)
+#                 # Partial match (chunk contained in combined text)
+#                 if normalized_chunk in normalized_combined:
+#                     return (i, combined_lines)
                 
-                # Fuzzy match with combined text
-                if len(normalized_chunk) > 10:
-                    chunk_words = set(normalized_chunk.split())
-                    combined_words = set(normalized_combined.split())
-                    common_words = chunk_words & combined_words
-                    if len(common_words) >= len(chunk_words) * 0.8:
-                        return (i, combined_lines)
-            else:
-                # Lines are too far apart, stop combining
-                break
+#                 # Fuzzy match with combined text
+#                 if len(normalized_chunk) > 10:
+#                     chunk_words = set(normalized_chunk.split())
+#                     combined_words = set(normalized_combined.split())
+#                     common_words = chunk_words & combined_words
+#                     if len(common_words) >= len(chunk_words) * 0.8:
+#                         return (i, combined_lines)
+#             else:
+#                 # Lines are too far apart, stop combining
+#                 break
     
-    return None
+#     return None
 
 def _lines_are_on_same_page(line1, line2):
     """Check if two lines are on the same page"""
@@ -949,7 +1114,7 @@ def test_anchoring():
         }
         
         # Save the anchored result
-        with open("anchored_output_V7.json", "w") as f:
+        with open("anchored_output_V8.json", "w") as f:
             json.dump(result, f, indent=2)
         # print("[DEBUG] anchored_output.json created successfully")
         
