@@ -903,32 +903,30 @@ def _pdf_lines_for_match(structured):
         #     json.dump(lines, f, indent=2)   
     return lines
 
+# ... (previous imports and setup)
+
 @app.route('/test-anchoring', methods=['POST'])
 def test_anchoring():
     """Test route to apply anchoring to existing output with real PDF data"""
     print("🧪 [DEBUG] /test-anchoring endpoint called!")
-    
     if not request.is_json:
         return jsonify({"error": "Request must be JSON"}), 400
-    
     data = request.get_json()
     simplified_view = data.get('simplified_view', '')
     structured = data.get('structured', [])
-    source_filename = data.get('source_filename', 'unknown.pdf')  # Add this
-    
+    source_filename = data.get('source_filename', 'unknown.pdf')
     print(f"[DEBUG] Received structured data: {len(structured)} elements")
     print(f"[DEBUG] Source filename: {source_filename}")
-    
     try:
-        # Load your existing chunked output
-        with open("sample_output.json", "r") as f:
+        # --- FIX APPLIED HERE ---
+        # Load your existing chunked output with UTF-8 encoding
+        with open("sample_output.json", "r", encoding='utf-8') as f: # <--- Added encoding='utf-8'
             result = json.load(f)
+        # --- END FIX ---
         
-        # print(f"[DEBUG] Loaded sample output with {len(result.get('chunks', []))} chunks")
-        
+        print(f"[DEBUG] Loaded sample output with {len(result.get('chunks', []))} chunks")
         # Create empty image_bindings since you're not using OpenAI
         image_bindings = []
-        
         # Apply anchoring with the real PDF structured data + filename
         anchored_chunks = _anchor_chunks_to_pdf(
             result.get("chunks", []), 
@@ -937,7 +935,6 @@ def test_anchoring():
             source_filename=source_filename
         )
         result["chunks"] = anchored_chunks
-        
         # Add document-level metadata too
         result["document_metadata"] = {
             "source_file": source_filename,
@@ -947,17 +944,19 @@ def test_anchoring():
             "anchored_chunks": sum(1 for chunk in anchored_chunks if chunk.get("metadata", {}).get("anchored", False)),
             "unanchored_chunks": sum(1 for chunk in anchored_chunks if not chunk.get("metadata", {}).get("anchored", False))
         }
-        
         # Save the anchored result
-        with open("anchored_output_V7.json", "w") as f:
-            json.dump(result, f, indent=2)
+        with open("anchored_output_V7.json", "w", encoding='utf-8') as f: # <--- Also specify encoding when writing
+            json.dump(result, f, indent=2, ensure_ascii=False) # <--- ensure_ascii=False to preserve Unicode
         # print("[DEBUG] anchored_output.json created successfully")
-        
-        # print("\n[DEBUG] Anchored result (first chunk metadata):")
+        # print("[DEBUG] Anchored result (first chunk metadata):")
         # if anchored_chunks:
         #     print(json.dumps(anchored_chunks[0]["metadata"], indent=2))
         
-        return jsonify(result), 200
+        # --- Optional: Explicitly set response encoding (though jsonify usually handles this) ---
+        response = jsonify(result)
+        response.headers['Content-Type'] = 'application/json; charset=utf-8'
+        return response
+        # --- End Optional ---
         
     except FileNotFoundError:
         return jsonify({"error": "sample_output.json not found. Please ensure the file exists."}), 404
@@ -972,220 +971,226 @@ def test_anchoring():
 def load_sample():
     """Load and return the sample output without anchoring"""
     try:
-        with open("sample_output.json", "r") as f:
+        # --- FIX APPLIED HERE TOO ---
+        # Load with UTF-8 encoding
+        with open("sample_output.json", "r", encoding='utf-8') as f: # <--- Added encoding='utf-8'
             result = json.load(f)
+        # --- END FIX ---
         return jsonify(result), 200
     except FileNotFoundError:
         return jsonify({"error": "sample_output.json not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# @app.route('/chunk-pdf', methods=['POST'])
-# def chunk_pdf_content():
-#     print("[DEBUG] Starting chunk_pdf_content function")
+# ... (rest of your code including chunk_pdf_content)
 
-#     if not request.is_json:
-#         print("[DEBUG] Request is not JSON")
-#         return jsonify({"error": "Request must be JSON"}), 400
+
+@app.route('/chunk-pdf', methods=['POST'])
+def chunk_pdf_content():
+    print("[DEBUG] Starting chunk_pdf_content function")
+
+    if not request.is_json:
+        print("[DEBUG] Request is not JSON")
+        return jsonify({"error": "Request must be JSON"}), 400
     
-#     print("[DEBUG] Request is JSON, getting data...")
-#     data = request.get_json()
-#     simplified_view = data.get('simplified_view', '')
-#     structured = data.get('structured', [])
+    print("[DEBUG] Request is JSON, getting data...")
+    data = request.get_json()
+    simplified_view = data.get('simplified_view', '')
+    structured = data.get('structured', [])
 
-#     print(f"[DEBUG] Data received - simplified_view length: {len(simplified_view)}, structured length: {len(structured)}")
+    print(f"[DEBUG] Data received - simplified_view length: {len(simplified_view)}, structured length: {len(structured)}")
 
-#     # Collect images with payload
-#     images = [el for el in structured if el.get("type") == "image" and el.get("image_b64")]
-#     print(f"[DEBUG] Found {len(images)} images with base64 data")
+    # Collect images with payload
+    images = [el for el in structured if el.get("type") == "image" and el.get("image_b64")]
+    print(f"[DEBUG] Found {len(images)} images with base64 data")
 
-#     # Optional debug
-#     print(f"[DEBUG] /chunk-pdf: structured={len(structured)}, images(with b64)={len(images)}")
+    # Optional debug
+    print(f"[DEBUG] /chunk-pdf: structured={len(structured)}, images(with b64)={len(images)}")
 
-#     # --- Interleave text and images in the exact order of [IMAGE ...] markers ---
-#     import re
-#     image_pat = re.compile(r"\[IMAGE\s+page=(\d+)\s+l=([\d.]+)\s+t=([\d.]+)\s+r=([\d.]+)\s+b=([\d.]+)\]")
+    # --- Interleave text and images in the exact order of [IMAGE ...] markers ---
+    import re
+    image_pat = re.compile(r"\[IMAGE\s+page=(\d+)\s+l=([\d.]+)\s+t=([\d.]+)\s+r=([\d.]+)\s+b=([\d.]+)\]")
 
-#     MAX_CHARS = 20000
-#     MAX_IMAGES = 24
-#     used_chars = 0
-#     used_images = 0
-#     contents = []
-#     image_bindings = []
+    MAX_CHARS = 20000
+    MAX_IMAGES = 24
+    used_chars = 0
+    used_images = 0
+    contents = []
+    image_bindings = []
 
-#     def push_text(txt: str):
-#         nonlocal used_chars
-#         if not txt:
-#             return
-#         remain = MAX_CHARS - used_chars
-#         if remain <= 0:
-#             return
-#         chunk = txt[:remain]
-#         contents.append({"type": "text", "text": chunk})
-#         used_chars += len(chunk)
+    def push_text(txt: str):
+        nonlocal used_chars
+        if not txt:
+            return
+        remain = MAX_CHARS - used_chars
+        if remain <= 0:
+            return
+        chunk = txt[:remain]
+        contents.append({"type": "text", "text": chunk})
+        used_chars += len(chunk)
 
-#     print("[DEBUG] About to process image markers...")
+    print("[DEBUG] About to process image markers...")
 
-#     # Group available images by page
-#     images_by_page = {}
-#     for im in images:
-#         p = im.get("page")
-#         images_by_page.setdefault(p, []).append(im)
+    # Group available images by page
+    images_by_page = {}
+    for im in images:
+        p = im.get("page")
+        images_by_page.setdefault(p, []).append(im)
 
-#     print(f"[DEBUG] Images grouped by page: {list(images_by_page.keys())}")
+    print(f"[DEBUG] Images grouped by page: {list(images_by_page.keys())}")
 
-#     # Determine marker order per page (asc/desc by t) and sort images accordingly
-#     # If markers decrease by t, use desc; else asc.
-#     markers_by_page = {}
-#     for m in image_pat.finditer(simplified_view):
-#         p = int(m.group(1))
-#         t = float(m.group(3))
-#         markers_by_page.setdefault(p, []).append(t)
+    # Determine marker order per page (asc/desc by t) and sort images accordingly
+    # If markers decrease by t, use desc; else asc.
+    markers_by_page = {}
+    for m in image_pat.finditer(simplified_view):
+        p = int(m.group(1))
+        t = float(m.group(3))
+        markers_by_page.setdefault(p, []).append(t)
 
-#     print(f"[DEBUG] Markers found on pages: {list(markers_by_page.keys())}")
+    print(f"[DEBUG] Markers found on pages: {list(markers_by_page.keys())}")
 
-#     def is_desc(ts):
-#         # decide by majority of adjacent deltas
-#         if len(ts) < 2:
-#             return False
-#         dec = sum(1 for i in range(1, len(ts)) if ts[i] < ts[i-1])
-#         inc = sum(1 for i in range(1, len(ts)) if ts[i] > ts[i-1])
-#         return dec > inc
+    def is_desc(ts):
+        # decide by majority of adjacent deltas
+        if len(ts) < 2:
+            return False
+        dec = sum(1 for i in range(1, len(ts)) if ts[i] < ts[i-1])
+        inc = sum(1 for i in range(1, len(ts)) if ts[i] > ts[i-1])
+        return dec > inc
 
-#     for p, lst in images_by_page.items():
-#         desc = is_desc(markers_by_page.get(p, []))
-#         lst.sort(key=lambda e: e["box"]["t"], reverse=desc)
+    for p, lst in images_by_page.items():
+        desc = is_desc(markers_by_page.get(p, []))
+        lst.sort(key=lambda e: e["box"]["t"], reverse=desc)
 
-#     # Pointers per page to consume images in order
-#     pointers = {p: 0 for p in images_by_page.keys()}
+    # Pointers per page to consume images in order
+    pointers = {p: 0 for p in images_by_page.keys()}
 
-#     idx = 0
-#     for m in image_pat.finditer(simplified_view):
-#         start, end = m.span()
-#         # text before the marker
-#         push_text(simplified_view[idx:start])
+    idx = 0
+    for m in image_pat.finditer(simplified_view):
+        start, end = m.span()
+        # text before the marker
+        push_text(simplified_view[idx:start])
 
-#         page = int(m.group(1))
+        page = int(m.group(1))
 
-#         # Keep the marker text so structure remains visible to the model
-#         push_text(simplified_view[start:end] + "\n")
+        # Keep the marker text so structure remains visible to the model
+        push_text(simplified_view[start:end] + "\n")
 
-#         # Attach next image for this page (by order)
-#         if used_images < MAX_IMAGES and page in images_by_page:
-#             pos = pointers.get(page, 0)
-#             if pos < len(images_by_page[page]):
-#                 im = images_by_page[page][pos]
-#                 pointers[page] = pos + 1
-#                 contents.append({
-#                     "type": "image_url",
-#                     "image_url": {"url": f"data:image/png;base64,{im['image_b64']}"}
-#                 })
-#                 image_bindings.append({"page": im.get("page"), "box": im.get("box")})
-#                 used_images += 1
+        # Attach next image for this page (by order)
+        if used_images < MAX_IMAGES and page in images_by_page:
+            pos = pointers.get(page, 0)
+            if pos < len(images_by_page[page]):
+                im = images_by_page[page][pos]
+                pointers[page] = pos + 1
+                contents.append({
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/png;base64,{im['image_b64']}"}
+                })
+                image_bindings.append({"page": im.get("page"), "box": im.get("box")})
+                used_images += 1
 
-#         idx = end
+        idx = end
 
-#     # Trailing text after last marker (or whole text if no markers)
-#     push_text(simplified_view[idx:])
+    # Trailing text after last marker (or whole text if no markers)
+    push_text(simplified_view[idx:])
 
-#     # Debug
-#     for p, lst in images_by_page.items():
-#         print(f"[DEBUG] Page {p}: markers_used={pointers.get(p,0)} of {len(lst)} images")
-#     print(f"[DEBUG] Interleaved -> text_chars={used_chars}, images_attached={used_images}")
-
-
-#     # Messages array
-#     messages = [
-#         {
-#             "role": "system",
-#             "content": f"""You are a PDF content analyzer that outputs structured JSON.
-#             Your task is to:
-#             1. Analyze the input content (text and attached images).
-#             2. Split it into logical chunks based on:
-#                - Section boundaries
-#                - Topic changes
-#                - Visual formatting (headings, paragraphs, lists, tables, images)
-#             3. Output a JSON object with the following schema:
-
-#             {JSON_SCHEMA}
-
-#             Formatting notes for the input you will receive:
-#             - Inline markers in the text are **for your analysis only**. Do NOT include them in your final JSON output.
-#             - Markers you may see:
-#               *word* → bold
-#               _word_ → italic
-#               *_word_* → bold+italic
-#               <s=XX> ... </s> → font size start/end
-#             - These markers indicate formatting styles of the original document.
-#             - Preserve the original text and line breaks exactly, but strip out these markers in your JSON output.
-#             - For images, analyze the attached image content and provide `caption` and put it in text field + `context` in metadata.
-#             - Always fill metadata fields: type, section, context (≤1 sentence), tags, continues, is_page_break, siblings, and page number.
-#             """
-#         },
-#         {
-#             "role": "user",
-#             "content": contents if contents else [{"type": "text", "text": simplified_view[:MAX_CHARS]}]
-#         }
-#     ]
-
-#     print(f"[DEBUG] Messages created. Content items: {len(contents)}")
-#     print("[DEBUG] About to call GPT API...")
+    # Debug
+    for p, lst in images_by_page.items():
+        print(f"[DEBUG] Page {p}: markers_used={pointers.get(p,0)} of {len(lst)} images")
+    print(f"[DEBUG] Interleaved -> text_chars={used_chars}, images_attached={used_images}")
 
 
+    # Messages array
+    messages = [
+        {
+            "role": "system",
+            "content": f"""You are a PDF content analyzer that outputs structured JSON.
+            Your task is to:
+            1. Analyze the input content (text and attached images).
+            2. Split it into logical chunks based on:
+               - Section boundaries
+               - Topic changes
+               - Visual formatting (headings, paragraphs, lists, tables, images)
+            3. Output a JSON object with the following schema:
 
-#     try:
-#             # Call GPT-4o multimodal
-#         response = client.chat.completions.create(
-#             model="gpt-4o",
-#             messages=messages,
-#             response_format={ "type": "json_object" },
-#             temperature=0.0
-#         )
+            {JSON_SCHEMA}
 
-#         print("[DEBUG] GPT API call successful!")
+            Formatting notes for the input you will receive:
+            - Inline markers in the text are **for your analysis only**. Do NOT include them in your final JSON output.
+            - Markers you may see:
+              *word* → bold
+              _word_ → italic
+              *_word_* → bold+italic
+              <s=XX> ... </s> → font size start/end
+            - These markers indicate formatting styles of the original document.
+            - Preserve the original text and line breaks exactly, but strip out these markers in your JSON output.
+            - For images, analyze the attached image content and provide `caption` and put it in text field + `context` in metadata.
+            - Always fill metadata fields: type, section, context (≤1 sentence), tags, continues, is_page_break, siblings, and page number.
+            """
+        },
+        {
+            "role": "user",
+            "content": contents if contents else [{"type": "text", "text": simplified_view[:MAX_CHARS]}]
+        }
+    ]
 
-#         print(f"\n[DEBUG] Raw GPT response content:")
-#         print("=" * 50)
-#         print(response.choices[0].message.content)
-#         print("=" * 50)
+    print(f"[DEBUG] Messages created. Content items: {len(contents)}")
+    print("[DEBUG] About to call GPT API...")
+
+
+
+    try:
+            # Call GPT-4o multimodal
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=messages,
+            response_format={ "type": "json_object" },
+            temperature=0.0
+        )
+
+        print("[DEBUG] GPT API call successful!")
+
+        print(f"\n[DEBUG] Raw GPT response content:")
+        print("=" * 50)
+        print(response.choices[0].message.content)
+        print("=" * 50)
         
-#         result = json.loads(response.choices[0].message.content)
+        result = json.loads(response.choices[0].message.content)
 
-#         # Write sample output BEFORE any further processing
-#         with open("sample_output.json", "w") as f:
-#             json.dump(result, f, indent=2)
-#         print("[DEBUG] sample_output.json created successfully")
+        # Write sample output BEFORE any further processing
+        with open("sample_output.json", "w") as f:
+            json.dump(result, f, indent=2)
+        print("[DEBUG] sample_output.json created successfully")
 
-#         # --- Map model chunks back to PDF positions (page + bbox) ---
-#         anchored_chunks = _anchor_chunks_to_pdf(result.get("chunks", []), structured, image_bindings)
-#         result["chunks"] = anchored_chunks
-#         pprint(result)
+        # --- Map model chunks back to PDF positions (page + bbox) ---
+        anchored_chunks = _anchor_chunks_to_pdf(result.get("chunks", []), structured, image_bindings)
+        result["chunks"] = anchored_chunks
+        pprint(result)
 
-#         # Debug log
-#         print("\n[DEBUG] GPT Response:")
-#         print("==================")
-#         # print(json.dumps(result, indent=2))
-#         print("==================\n")
-#         return jsonify(result), 200
-#     except json.JSONDecodeError as e:
-#         print(f"\n[ERROR] Failed to parse JSON: {str(e)}")
-#         print(f"Raw response: {response.choices[0].message.content}")
+        # Debug log
+        print("\n[DEBUG] GPT Response:")
+        print("==================")
+        # print(json.dumps(result, indent=2))
+        print("==================\n")
+        return jsonify(result), 200
+    except json.JSONDecodeError as e:
+        print(f"\n[ERROR] Failed to parse JSON: {str(e)}")
+        print(f"Raw response: {response.choices[0].message.content}")
         
-#         # Still try to save the raw response for debugging
-#         try:
-#             with open("raw_response.txt", "w") as f:
-#                 f.write(response.choices[0].message.content)
-#             print("[DEBUG] Saved raw response to raw_response.txt")
-#         except Exception as save_err:
-#             print(f"[ERROR] Could not save raw response: {save_err}")
+        # Still try to save the raw response for debugging
+        try:
+            with open("raw_response.txt", "w") as f:
+                f.write(response.choices[0].message.content)
+            print("[DEBUG] Saved raw response to raw_response.txt")
+        except Exception as save_err:
+            print(f"[ERROR] Could not save raw response: {save_err}")
             
-#         return jsonify({"error": "Failed to parse model output as JSON"}), 500
-#     except Exception as e:
-#         print(f"\n[ERROR] Unexpected error: {str(e)}")
-#         print(f"Error type: {type(e)}")
-#         import traceback
-#         traceback.print_exc()
-#         return jsonify({"error": f"Internal server error: {str(e)}"}), 500
+        return jsonify({"error": "Failed to parse model output as JSON"}), 500
+    except Exception as e:
+        print(f"\n[ERROR] Unexpected error: {str(e)}")
+        print(f"Error type: {type(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
 
 
 # You can also add a schema validator not a validator not sure yet

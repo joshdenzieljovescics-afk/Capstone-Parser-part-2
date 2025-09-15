@@ -441,6 +441,51 @@ p {
   padding: 0;
 }
 
+/* Table styles for chunks */
+.chunk-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.9em;
+  background-color: white;
+}
+
+.chunk-thead {
+  background-color: #f1f5f9;
+}
+
+.chunk-th,
+.chunk-td {
+  border: 1px solid #cbd5e1;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.chunk-th {
+  background-color: #e2e8f0;
+  font-weight: 600;
+}
+
+.chunk-tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.chunk-tr:hover {
+  background-color: #f1f5f9;
+}
+
+/* Responsive table handling */
+@media (max-width: 768px) {
+  .chunk-table {
+    font-size: 0.8em;
+  }
+  
+  .chunk-th,
+  .chunk-td {
+    padding: 6px 8px;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {

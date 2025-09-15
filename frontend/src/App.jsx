@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { Document, Page, pdfjs } from 'react-pdf';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import './App.css';
@@ -154,6 +155,28 @@ function App() {
     );
   };
 
+  // Custom components for table rendering
+  const markdownComponents = {
+    table: ({ node, ...props }) => (
+      <table className="chunk-table" {...props} />
+    ),
+    thead: ({ node, ...props }) => (
+      <thead className="chunk-thead" {...props} />
+    ),
+    tbody: ({ node, ...props }) => (
+      <tbody className="chunk-tbody" {...props} />
+    ),
+    tr: ({ node, ...props }) => (
+      <tr className="chunk-tr" {...props} />
+    ),
+    th: ({ node, ...props }) => (
+      <th className="chunk-th" {...props} />
+    ),
+    td: ({ node, ...props }) => (
+      <td className="chunk-td" {...props} />
+    )
+  };
+
   return (
     <div className="container">
       <h1>PDF Grounding Tool</h1>
@@ -281,7 +304,10 @@ function App() {
                 </div>
 
                 <div style={{ whiteSpace: 'pre-line' }}>
-                  <ReactMarkdown>
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]} 
+                    components={markdownComponents}
+                  >
                     {chunk.text}
                   </ReactMarkdown>
                 </div>
@@ -367,7 +393,13 @@ function App() {
                           </div>
 
                           <div style={{ whiteSpace: 'pre-line' }}>
-                            <ReactMarkdown className="smart-chunk-content">{chunk.text || ''}</ReactMarkdown>
+                            <ReactMarkdown 
+                              remarkPlugins={[remarkGfm]} 
+                              components={markdownComponents}
+                              className="smart-chunk-content"
+                            >
+                              {chunk.text || ''}
+                            </ReactMarkdown>
                           </div>
                         </div>
                       ))}
