@@ -1,213 +1,431 @@
-Base styles
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #f4f7f9;
-  color: #333;
-  margin: 0;
-  padding: 40px 20px;
+/* ===== Global Reset & Base Styles ===== */
+/* Applying the clean, light theme from the image */
+:root {
+  --background-color: #F9FAFB; /* Light grey background */
+  --card-background-color: #FFFFFF; /* White for cards/containers */
+  --primary-text-color: #1F2937; /* Dark grey for headings/important text */
+  --secondary-text-color: #6B7280; /* Medium grey for body text */
+  --border-color: #E5E7EB; /* Light grey for borders and dividers */
+  --accent-color: #4F46E5; /* A modern blue/indigo for interactive elements */
+  --accent-color-hover: #4338CA;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: var(--background-color);
+  color: var(--secondary-text-color);
+  line-height: 1.6;
+  /* Correction 1: Center the main container on the page */
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+h1, h2 {
+  color: var(--primary-text-color);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.25rem; }
+
+/* ===== Main App Container ===== */
 .container {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Correction 1: Center child elements like the upload box */
   width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
+  max-width: 1400px; /* Wider for the two-column layout */
+}
+
+/* Header text styling */
+.container > h1, .container > p {
   text-align: center;
 }
 
-h1 {
-  color: #2c3e50;
-  margin-bottom: 10px;
-}
-p {
-  color: #7f8c8d;
-  margin-bottom: 30px;
+.container > p {
+  max-width: 500px;
+  margin: 0 auto 32px auto;
 }
 
-/* Upload section */
+/* ===== Upload Section ===== */
 .upload-section {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+  width: 100%;
 }
 
-input[type="file"] {
-  border: 2px dashed #bdc3c7;
-  padding: 10px;
+.upload-box {
+  width: 100%;
+  max-width: 600px; /* A fixed max-width for the box */
+  border: 2px dashed var(--border-color);
   border-radius: 8px;
+  padding: 48px 24px;
   text-align: center;
-  cursor: pointer;
-  background-color: #fff;
-  transition: border-color 0.3s;
-}
-input[type="file"]:hover {
-  border-color: #3498db;
+  background-color: var(--card-background-color);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
+.upload-box.drag-active {
+  background-color: #F3F4F6;
+  border-color: var(--accent-color);
+}
+
+.upload-box svg {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  color: var(--secondary-text-color); /* Updated SVG color */
+}
+
+.upload-box p {
+  color: var(--primary-text-color);
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.upload-box small {
+  display: block;
+  margin-bottom: 24px;
+}
+
+.browse-btn {
+  display: inline-block;
+  color: var(--accent-color);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.browse-btn:hover {
+  color: var(--accent-color-hover);
+  background-color: #F3F4F6; /* Light hover effect */
+}
+
+
+/* ===== General Button Styles ===== */
 button {
-  background-color: #3498db;
+  background-color: var(--accent-color);
   color: white;
   border: none;
-  padding: 12px 22px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
+
 button:hover:not(:disabled) {
-  background-color: #2980b9;
+  background-color: var(--accent-color-hover);
 }
+
 button:disabled {
-  background-color: #95a5a6;
+  background-color: #D1D5DB;
   cursor: not-allowed;
 }
 
-.error-message {
-  color: #e74c3c;
-  font-weight: bold;
-  margin-top: 10px;
+/* Specific rule for the button inside the upload box if you cannot move it */
+.upload-box button {
+  margin-top: 12px;
 }
 
-/* === Layout === */
+/* ===== Main Content Layout (PDF & Chunks) ===== */
 .main-content-area {
-  display: flex;
-  gap: 30px;
-  margin-top: 30px;
-  text-align: left;
+  display: grid;
+  /* Correction 2: Use a fixed 2-column grid */
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
 }
 
 .pdf-preview-container,
 .parsed-output-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.pdf-preview-container h2,
-.parsed-output-container h2 {
-  margin-top: 0;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #ecf0f1;
-  margin-bottom: 15px;
-}
-
-/* === PDF Preview === */
-.pdf-document-wrapper {
-  border: 1px solid #e0e0e0;
+  background-color: var(--card-background-color);
   border-radius: 8px;
-  height: 75vh;
-  overflow-y: auto;
-  background-color: #fafafa;
-  padding: 20px;
+  border: 1px solid var(--border-color);
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
 }
 
+.pdf-document-wrapper,
+.content-container {
+  max-height: 75vh;
+  overflow-y: auto;
+  margin-top: 16px; /* Space between title and content */
+  padding-right: 8px; /* For scrollbar */
+}
+
+/* ===== PDF Viewer Specifics ===== */
 .pdf-page-container {
   position: relative;
-  margin-bottom: 20px;
-  line-height: 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  border-radius: 4px;
-  overflow: hidden;
+  margin: 0 auto 16px auto; /* Center page */
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.pdf-page-container canvas {
-  display: block;
-}
-
-.pdf-document-wrapper .placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: #7f8c8d;
-  font-style: italic;
-}
-
-/* Bounding boxes */
-.bounding-box {
-  border: 1px dashed rgba(0, 0, 0, 0.6);
-  border-radius: 3px;
+.highlight-box {
   position: absolute;
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  background-color: rgba(79, 70, 229, 0.05);
+  border-radius: 4px;
   pointer-events: none;
-  transition: all 0.2s ease-in-out;
-  z-index: 100; /* ✅ make sure it's above PDF canvas */
-  background-color: rgba(0, 255, 0, 0.15); /* ✅ always slightly visible */
+  z-index: 5;
 }
 
-.bounding-box.highlighted {
-  border: 2px solid red;
-  background-color: rgba(255, 0, 0, 0.2);
+.highlight-box.hovered {
+  border: 2px solid var(--accent-color);
+  background-color: rgba(79, 70, 229, 0.15);
+  z-index: 10;
 }
 
 
-/* === Parsed Output === */
-.content-container {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  height: 75vh;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  overflow-y: auto;
-  background-color: #fff;
-}
-
-.placeholder {
-  padding: 20px;
-  font-style: italic;
-  margin: auto;
-  color: #7f8c8d;
-}
-
+/* ===== Parsed Output & Chunks ===== */
 .markdown-chunk {
-  padding: 8px 12px;
-  margin: 4px 0;
-  border-radius: 6px;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  padding: 16px 8px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
   cursor: pointer;
 }
-.markdown-chunk:hover {
-  background-color: rgba(52, 152, 219, 0.1);
-  transform: translateX(2px);
-}
-.markdown-chunk.hovered {
-  background-color: rgba(255, 223, 223, 0.7);
+
+.markdown-chunk:last-child {
+  border-bottom: none;
 }
 
-.error-text {
-  color: #e74c3c;
-  font-size: 12px;
+.markdown-chunk:hover {
+  background-color: #F3F4F6;
 }
 
 .chunk-header {
   display: flex;
-  gap: 10px;
   align-items: center;
-  margin-bottom: 5px;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.chunk-header strong {
+  color: var(--primary-text-color);
 }
 
 .chunk-type {
-  background: #eee;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.9em;
+  font-size: 0.75rem;
+  background-color: #F3F4F6;
+  border: 1px solid var(--border-color);
+  border-radius: 99px; /* Pill shape */
+  padding: 2px 8px;
+  color: var(--secondary-text-color);
 }
+
+.markdown-chunk p, .markdown-chunk h3, .markdown-chunk h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--secondary-text-color);
+}
+
+.json-output {
+  background: #F3F4F6;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: "Fira Code", monospace;
+  font-size: 0.85rem;
+  color: #374151;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* ===== View Toggles (Markdown/JSON) ===== */
+.parsed-output-container > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.parsed-output-container button {
+  background: none;
+  color: var(--secondary-text-color);
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+.parsed-output-container button:hover {
+  background-color: #F3F4F6;
+  color: var(--primary-text-color);
+}
+.parsed-output-container button.active-tab {
+  background-color: #E5E7EB;
+  color: var(--primary-text-color);
+}
+
+
+/* ===== General Utility ===== */
+.placeholder {
+  text-align: center;
+  color: #9CA3AF;
+  padding: 40px 20px;
+  font-style: italic;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-message {
+  color: #EF4444; /* Red for errors */
+  margin: 16px 0;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* MODAL STYLES (Not in image, but updated to light theme) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: var(--card-background-color);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 1000px;
+  height: 80%;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header button {
+  background-color: #F9FAFB;
+  border: 1px solid var(--border-color);
+  color: var(--secondary-text-color);
+}
+
+.modal-header button.active-tab {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* ===== Styles for Chunk Editor ===== */
+.chunk-header {
+  /* Make room for the new Edit button */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.chunk-actions {
+  margin-left: auto; /* Pushes the Edit button to the far right */
+}
+
+.edit-button {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--secondary-text-color);
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.edit-button:hover {
+  background-color: #F3F4F6;
+  color: var(--primary-text-color);
+}
+
+.chunk-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-textarea {
+  width: 100%;
+  min-height: 150px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  background-color: #F9FAFB;
+}
+
+.edit-textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+.edit-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.edit-controls .edit-button.save {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
+}
+
+.edit-controls .edit-button.save:hover {
+  background-color: var(--accent-color-hover);
+}
+
+/* Add these styles to App.css */
 
 .heading-level {
-  color: #666;
-  font-size: 0.9em;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #155E75; /* A teal color for headings */
+  background-color: #F0F9FF;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
-.style-info {
-  color: #666;
-  display: block;
-  margin-top: 5px;
+.chunk-section {
+  font-size: 0.8rem;
+  color: var(--secondary-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

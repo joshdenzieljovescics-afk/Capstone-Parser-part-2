@@ -227,22 +227,13 @@ def extract_images_with_bbox_pymupdf(file_bytes, page_number):
     images = []
     with fitz.open(stream=file_bytes, filetype="pdf") as doc:
         page = doc[page_number]
-
-        # Enumerate all image xrefs used on this page
-        xref_rows = page.get_images(full=True)  # [(xref, smask, w, h, bpc, cs, name, ...), ...]
+        xref_rows = page.get_images(full=True)
         if not xref_rows:
             return images
-        
-        image_counter = 0  # Counter for multiple placements of same xref
 
-        for xref_idx, row in enumerate(xref_rows):  # ✅ Use enumerate
+        for img_index, row in enumerate(xref_rows):
             xref = row[0]
-            rects = page.get_image_rects(xref)  # all placements (may be multiple)
-            if not rects:
-                # No visible placement for this xref on this page
-                continue
-
-            # Build pixmap once per xref
+            rects = page.get_image_rects(xref)  # may return multiple placements
             try:
                 pix = fitz.Pixmap(doc, xref)
                 if pix.n > 4:  # convert CMYK/others to RGB
@@ -252,22 +243,17 @@ def extract_images_with_bbox_pymupdf(file_bytes, page_number):
                 print(f"[WARN] xref={xref} pixmap failed: {e}")
                 continue
 
-            for rect in rects:
-                l, t, r, b = float(rect.x0), float(rect.y0), float(rect.x1), float(rect.y1)
-
-                # Generate unique image ID with page prefix
-                unique_image_id = f"p{page_number + 1}-img-{image_counter}"
-                image_counter += 1
-
+            for placement_idx, rect in enumerate(rects):
+                l, t, r, b = rect.x0, rect.y0, rect.x1, rect.y1
+                unique_image_id = f"p{page_number+1}-img-{img_index}-{placement_idx}"
                 images.append({
-                    "id": unique_image_id,  # ✅ Add unique ID
+                    "id": unique_image_id,
                     "type": "image",
                     "subtype": "embedded",
                     "box": {"l": l, "t": t, "r": r, "b": b},
                     "page": page_number + 1,
                     "image_b64": img_b64,
                 })
-
     return images
 
 
@@ -606,20 +592,16 @@ def _anchor_chunks_to_pdf(result_chunks, structured, image_bindings, source_file
                 
         elif chunk_type == "image":
             print(f"[DEBUG] Processing image chunk on page {chunk_page}")
-            # Find matching image in structured data by page
             if chunk_page in images_by_page:
-                # Take the first available image on that page (you could improve matching logic)
-                image_element = images_by_page[chunk_page][0]  # Simple approach
-                
-                # Copy the box coordinates directly from structured data
-                chunk["metadata"]["box"] = image_element.get("box", {})
-                chunk["metadata"]["page"] = image_element.get("page", chunk_page)
+                # Attach ALL images on that page
+                chunk["metadata"]["boxes"] = [img.get("box", {}) for img in images_by_page[chunk_page]]
+                chunk["metadata"]["page"] = chunk_page
                 chunk["metadata"]["anchored"] = True
-                print(f"[DEBUG] Anchored image: page={chunk['metadata']['page']}, box={chunk['metadata']['box']}")
+                print(f"[DEBUG] Anchored {len(images_by_page[chunk_page])} images on page {chunk_page}")
             else:
                 chunk["metadata"]["anchored"] = False
-                print(f"[WARN] No image found on page {chunk_page}")
-                
+                print(f"[WARN] No images found on page {chunk_page}")
+
         else:
             # ✅ PRESERVE ALL YOUR EXISTING LINE-BY-LINE LOGIC
             # Split chunk text into individual lines
