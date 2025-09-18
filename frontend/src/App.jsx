@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { Document, Page, pdfjs } from 'react-pdf';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
-import UploadBox from "./UploadBox";
+import UploadBox from './UploadBox';
 import './App.css';
 
 // Setup for the PDF.js worker (required by react-pdf)
@@ -18,8 +18,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [pdfPreviewFile, setPdfPreviewFile] = useState(null);
-  const [hoveredChunkIndex, setHoveredChunkIndex] = useState(null);
-  const [hoveredChunk, setHoveredChunk] = useState(null); //new
+  // const [hoveredChunkIndex, setHoveredChunkIndex] = useState(null);
+  // const [hoveredChunk, setHoveredChunk] = useState(null);
+  const [selectedChunkId, setSelectedChunkId] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [pageDimensions, setPageDimensions] = useState({});
   const pageRefs = useRef([]);
@@ -31,8 +32,7 @@ function App() {
   const [editingChunkIndex, setEditingChunkIndex] = useState(null); // Tracks which chunk is being edited
   const [editText, setEditText] = useState(""); // Holds the text while editing
   const [highlightBox, setHighlightBox] = useState(null);
-
-
+  
   const getAllBoxesForPage = (pageNumber) => {
   if (!chunkedOutput?.chunks) return [];
   const currentPageInfo = pageDimensions[pageNumber];
@@ -190,49 +190,62 @@ function App() {
     }));
   };
 
-  const handleMouseEnter = (chunk) => {
-  const pageNumber = chunk.metadata?.page;
-  const currentPageInfo = pageDimensions[pageNumber];
-
-  if (pageNumber && currentPageInfo) {
-    const scaleX = currentPageInfo.width / currentPageInfo.originalWidth;
-    const scaleY = currentPageInfo.height / currentPageInfo.originalHeight;
-
-    if (Array.isArray(chunk.metadata?.boxes)) {
-      // Multiple highlight boxes
-      const scaledBoxes = chunk.metadata.boxes.map(b => ({
-        left: b.l * scaleX,
-        top: b.t * scaleY,
-        width: (b.r - b.l) * scaleX,
-        height: (b.b - b.t) * scaleY,
-      }));
-
-      setHighlightBox({ page: pageNumber, boxes: scaledBoxes });
-    } else if (chunk.metadata?.box) {
-      // Single highlight box
-      const b = chunk.metadata.box;
-      const scaledBox = {
-        left: b.l * scaleX,
-        top: b.t * scaleY,
-        width: (b.r - b.l) * scaleX,
-        height: (b.b - b.t) * scaleY,
-      };
-
-      setHighlightBox({ page: pageNumber, boxes: [scaledBox] });
+  const handleChunkClick = (chunk) => {
+    // If clicking the already selected chunk, deselect it. Otherwise, select the new one.
+    if (chunk.id === selectedChunkId) {
+      setSelectedChunkId(null);
+    } else {
+      setSelectedChunkId(chunk.id);
     }
-  }
-
-  // Smooth scroll to PDF page
-  if (pageNumber && pageRefs.current[pageNumber - 1]) {
-    pageRefs.current[pageNumber - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-};
-
-
-  // --- Handler to clear the hovered chunk ---
-  const handleMouseLeave = () => {
-    setHighlightBox(null); // Clear the highlight box
   };
+
+
+  // ✅ ADD this useEffect hook to react to changes in the selected chunk
+  useEffect(() => {
+    // If no chunk is selected, clear the highlight
+    if (!selectedChunkId) {
+      setHighlightBox(null);
+      return;
+    }
+
+    // Find the full chunk object from the ID
+    const chunk = chunkedOutput?.chunks.find(c => c.id === selectedChunkId);
+    if (!chunk) return;
+
+    const pageNumber = chunk.metadata?.page;
+    const currentPageInfo = pageDimensions[pageNumber];
+
+    // Calculate the highlight box coordinates (logic moved from old handleMouseEnter)
+    if (pageNumber && currentPageInfo) {
+      const scaleX = currentPageInfo.width / currentPageInfo.originalWidth;
+      const scaleY = currentPageInfo.height / currentPageInfo.originalHeight;
+      let scaledBoxes = [];
+
+      if (Array.isArray(chunk.metadata?.boxes)) {
+        scaledBoxes = chunk.metadata.boxes.map(b => ({
+          left: b.l * scaleX,
+          top: b.t * scaleY,
+          width: (b.r - b.l) * scaleX,
+          height: (b.b - b.t) * scaleY,
+        }));
+      } else if (chunk.metadata?.box) {
+        const b = chunk.metadata.box;
+        scaledBoxes.push({
+          left: b.l * scaleX,
+          top: b.t * scaleY,
+          width: (b.r - b.l) * scaleX,
+          height: (b.b - b.t) * scaleY,
+        });
+      }
+      setHighlightBox({ page: pageNumber, boxes: scaledBoxes });
+    }
+
+    // Scroll the PDF page into view
+    if (pageNumber && pageRefs.current[pageNumber - 1]) {
+      pageRefs.current[pageNumber - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [selectedChunkId, chunkedOutput, pageDimensions]); // Dependencies for the effect
+
 
   // When a user clicks "Edit"
   const handleEdit = (chunkText, index) => {
@@ -389,12 +402,11 @@ function App() {
             )}
 
             {chunkView === 'markdown' && chunkedOutput?.chunks?.map((chunk, index) => (
-              <div
-                key={`chunk_text_${index}`}
-                onMouseEnter={() => handleMouseEnter(chunk, index)}
-                onMouseLeave={handleMouseLeave}
-                className="markdown-chunk"
-              >
+            <div
+              key={`chunk_text_${index}`}
+              onClick={() => handleChunkClick(chunk)}
+              className={`markdown-chunk ${chunk.id === selectedChunkId ? 'selected' : ''}`}
+            >
                 {editingChunkIndex === index ? (
                   // --- EDITING VIEW (No changes here) ---
                   <div className="chunk-editor">
@@ -439,11 +451,21 @@ function App() {
               </div>
             ))}
 
-            {chunkView === 'json' && (
-              <pre className="json-output">
-                {JSON.stringify(chunkedOutput, null, 2)}
-              </pre>
-            )}
+            {chunkView === 'json' && chunkedOutput?.chunks?.map((chunk, index) => {
+            const safeString = JSON.stringify(chunk, null, 2);
+            return (
+              <pre
+                key={`json_chunk_${index}`}
+                onClick={() => handleChunkClick(chunk)}
+                className={`json-chunk ${chunk.id === selectedChunkId ? 'selected' : ''}`}
+              >
+                  <code>{safeString}</code>
+                </pre>
+              );
+            })}
+
+
+
 
           </div>
         </div>
@@ -528,21 +550,21 @@ function App() {
               {viewerTab === 'parsed' && (
                 <>
                   {jsonOutput?.simplified ? (
-                    <pre
-                      style={{
-                        whiteSpace: 'pre-wrap',
-                        wordWrap: 'break-word',
-                        background: '#111',
-                        padding: 12,
-                        borderRadius: 6,
-                        border: '1px solid #333',
-                      }}
-                    >
-                      {jsonOutput.simplified}
-                    </pre>
-                  ) : (
-                    <p className="placeholder">No parsed output yet. Parse a PDF first.</p>
-                  )}
+                  <pre
+                    style={{
+                      whiteSpace: 'pre-wrap',
+                      wordWrap: 'break-word',
+                      background: '#111',
+                      padding: 12,
+                      borderRadius: 6,
+                      border: '1px solid #333',
+                    }}
+                      >
+                    {JSON.stringify(jsonOutput.simplified, null, 2)}
+                  </pre>
+                ) : (
+                  <p className="placeholder">No parsed output yet. Parse a PDF first.</p>
+                )}
                 </>
               )}
 

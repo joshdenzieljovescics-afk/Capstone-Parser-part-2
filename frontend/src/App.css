@@ -164,10 +164,12 @@ button:disabled {
 
 .pdf-document-wrapper,
 .content-container {
-  max-height: 75vh;
-  overflow-y: auto;
-  margin-top: 16px; /* Space between title and content */
-  padding-right: 8px; /* For scrollbar */
+  margin-top: 16px;
+  padding-right: 8px; /* For the scrollbar */
+  overflow-y: auto;   /* Allow vertical scrolling */
+  flex: 1;            /* CRITICAL: Tells container to grow and fill space */
+  min-height: 0;      /* CRITICAL: Allows container to shrink */
+  max-height: 75vh;   /* ✅ ADD THIS LINE */
 }
 
 /* ===== PDF Viewer Specifics ===== */
@@ -428,4 +430,34 @@ button:disabled {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.json-chunk {
+  font-family: "Fira Code", monospace;
+  font-size: 0.85rem;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background-color: #F3F4F6;
+  border: 1px solid var(--border-color);
+  color: #374151;
+  white-space: pre-wrap;    /* Wraps text like normal */
+  word-break: break-all;    /* Forces breaks in long strings (like image data) */
+  overflow-x: auto;         /* Adds a horizontal scrollbar if a line is still too long */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+/* A subtle highlight on hover */
+.json-chunk:hover {
+  border-color: #A5B4FC; /* A lighter version of the accent color */
+  cursor: pointer;
+}
+
+/* The "glow" effect for the selected chunk */
+.json-chunk.selected {
+  border-color: var(--accent-color);
+  background-color: #F0F1FD; /* A very light tint of the accent color */
+
+  /* This is the glow effect */
+  box-shadow: 0 0 8px 1px rgba(79, 70, 229, 0.4); 
 }

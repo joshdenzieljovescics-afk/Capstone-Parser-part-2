@@ -47,7 +47,7 @@
         "siblings": [],
         "page": 1,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.402933",
+        "created_at": "2025-09-18T21:09:42.699672",
         "box": {
           "l": 105.46835375,
           "t": 97.68478525500007,
@@ -64,7 +64,7 @@
           "p1-ln-7"
         ]
       },
-      "id": "chunk-2-4c7422fc"
+      "id": "chunk-2-d896a228"
     },
     {
       "text": "Proponents: Section: 4ITD 1. Carla, Carlos Miguel M.\n2. Chua, Paul Andrew T.\n3. Hilario, Lance Joshua J.\n4. Joves, Josh Denziel S.\n5. Sapit III, Amado M.",
@@ -82,7 +82,7 @@
         "siblings": [],
         "page": 1,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.403597",
+        "created_at": "2025-09-18T21:09:42.700317",
         "box": {
           "l": 119.82932975,
           "t": 233.0989229449999,
@@ -99,7 +99,7 @@
           "p1-ln-12"
         ]
       },
-      "id": "chunk-3-a4024547"
+      "id": "chunk-3-b67afa5c"
     },
     {
       "text": "Project Title: SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics",
@@ -118,7 +118,7 @@
         "siblings": [],
         "page": 1,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.404051",
+        "created_at": "2025-09-18T21:09:42.700802",
         "box": {
           "l": 72.108002,
           "t": 318.60972646999994,
@@ -132,7 +132,7 @@
           "p1-ln-14"
         ]
       },
-      "id": "chunk-4-a7ede7b8"
+      "id": "chunk-4-f26ea26b"
     },
     {
       "text": "Capstone Class Coordinator: Lintag, Leonid C.\nOral defense date: July 17, 2025",
@@ -150,7 +150,7 @@
         "siblings": [],
         "page": 1,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.404344",
+        "created_at": "2025-09-18T21:09:42.701168",
         "box": {
           "l": 72.108002,
           "t": 357.31651419499997,
@@ -164,7 +164,7 @@
           "p1-ln-16"
         ]
       },
-      "id": "chunk-5-beaa1ff8"
+      "id": "chunk-5-5cdcf8e1"
     },
     {
       "text": "Capstone Project Scope and Limitations:\nScope and Limitations\nScope",
@@ -182,7 +182,7 @@
         "siblings": [],
         "page": 1,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.404545",
+        "created_at": "2025-09-18T21:09:42.701387",
         "box": {
           "l": 72.108002,
           "t": 406.248583565957,
@@ -197,7 +197,7 @@
           "p1-ln-19"
         ]
       },
-      "id": "chunk-6-0a48fad3"
+      "id": "chunk-6-ab84c362"
     },
     {
       "text": "This capstone project focuses on the development of SafexpressOps, a web based logistics support platform powered by Agentic Artificial Intelligence, specifically tailored to enhance the operational workflows of Safexpress Logistics Inc. The core components and features included within the project scope are:",
@@ -216,7 +216,7 @@
         "siblings": [],
         "page": 1,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.404872",
+        "created_at": "2025-09-18T21:09:42.701663",
         "box": {
           "l": 144.108002,
           "t": 472.35975797,
@@ -233,7 +233,7 @@
           "p1-ln-24"
         ]
       },
-      "id": "chunk-7-413cb699"
+      "id": "chunk-7-76da0095"
     },
     {
       "text": "AI Powered Knowledge Base\n- Consolidates manuals, company policies, warehouse-specific workflows, client requirements, and internal structures into a centralized database, accessible via a conversational AI assistant.",
@@ -251,7 +251,7 @@
         "siblings": [],
         "page": 1,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.405266",
+        "created_at": "2025-09-18T21:09:42.702157",
         "box": {
           "l": 179.358002,
           "t": 610.6722709395215,
@@ -267,7 +267,7 @@
           "p1-ln-28"
         ]
       },
-      "id": "chunk-8-76615233"
+      "id": "chunk-8-0a0797cc"
     },
     {
       "text": "Weaviate vector database is used in the construction of the centralized knowledge base. OpenAI's text-embedding-ada-002 model is used to index all documents by translating their text into numerical representations. When a user searches, the most contextually relevant content is found by ranking relevance using cosine similarity. The system employs version control for any modified documents, detects and flags duplicate source files upon upload, and has automated data cleanup functions to preserve data integrity.",
@@ -286,7 +286,7 @@
         "siblings": [],
         "page": 2,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.408231",
+        "created_at": "2025-09-18T21:09:42.705492",
         "box": {
           "l": 216.108002,
           "t": 72.92226593952148,
@@ -307,7 +307,7 @@
           "p2-ln-9"
         ]
       },
-      "id": "chunk-9-d1e854f3"
+      "id": "chunk-9-29b90db1"
     },
     {
       "text": "Limitations\nThis project aims to provide significant automation and intelligent support; however, there are some limitations to be acknowledged:",
@@ -324,7 +324,7 @@
         "siblings": [],
         "page": 2,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.408632",
+        "created_at": "2025-09-18T21:09:42.706041",
         "box": {
           "l": 143.358002,
           "t": 295.12089647,
@@ -340,7 +340,7 @@
           "p2-ln-13"
         ]
       },
-      "id": "chunk-10-1db6096a"
+      "id": "chunk-10-010c1145"
     },
     {
       "text": "a. Agent Personal Assistant features will not be available to all users during the initial version. Token consumption will be monitored, and access will be allocated only to users who critically require the functionality.",
@@ -358,7 +358,7 @@
         "siblings": [],
         "page": 2,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.408986",
+        "created_at": "2025-09-18T21:09:42.706460",
         "box": {
           "l": 139.608002,
           "t": 418.87089647,
@@ -374,7 +374,7 @@
           "p2-ln-17"
         ]
       },
-      "id": "chunk-11-3d3d4e07"
+      "id": "chunk-11-fe7df1b7"
     },
     {
       "text": "b. Testing data access will be limited to up to six (6) months, depending on data volume, or all will be dummy data. This is to avoid exceeding usage limits under the free-tier plan, prevent undue financial burden on the student developers currently working on the system, and protect their sensitive data.",
@@ -392,7 +392,7 @@
         "siblings": [],
         "page": 2,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.409314",
+        "created_at": "2025-09-18T21:09:42.706833",
         "box": {
           "l": 139.608002,
           "t": 532.620896045,
@@ -409,7 +409,7 @@
           "p2-ln-22"
         ]
       },
-      "id": "chunk-12-5562c4f1"
+      "id": "chunk-12-cfc24116"
     },
     {
       "text": "<table><tbody><tr><td>PROGRAM:</td><td>Bachelors of Science on Information Technology</td></tr><tr><td>DEFENSE DATE:</td><td>July 17, 2025</td></tr><tr><td>TITLE:</td><td>SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics</td></tr><tr><td>MEMBERS:</td><td>1. Carla, Carlos Miguel M.<br>2. Chua, Paul Andrew T.<br>3. Hilario, Lance Joshua J.<br>4. Joves, Josh Denziel S.</td></tr></tbody></table>",
@@ -427,7 +427,7 @@
         "siblings": [],
         "page": 3,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.409577",
+        "created_at": "2025-09-18T21:09:42.707185",
         "box": {
           "b": 465.5,
           "l": 72.50000027749999,
@@ -436,7 +436,7 @@
         },
         "anchored": true
       },
-      "id": "chunk-13-e008692a"
+      "id": "chunk-13-9a84ef17"
     },
     {
       "text": "ADVISER: Mr. Sapit, Amado M. III\nThis is to verify that the objectives, scope, and limitations have been approved for Capstone Project development in IT 2621 1 (IT Capstone Project 2).",
@@ -454,7 +454,7 @@
         "siblings": [],
         "page": 3,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.409706",
+        "created_at": "2025-09-18T21:09:42.707318",
         "box": {
           "l": 113.358002,
           "t": 469.40330522,
@@ -467,7 +467,7 @@
           "p3-ln-14"
         ]
       },
-      "id": "chunk-14-e9f327aa"
+      "id": "chunk-14-91de664c"
     },
     {
       "text": "Capstone Project Oral Defense Panel: Signature/Date 1. Zhuo, Eugenia R.\n2. Estrella, Noel E.\n3. Domingo, Mylene J.\nVerified by: Noted by:\nSapit III, Amado M. Lintag, Leonid C. Technical Adviser Capstone Class Coordinator Date: ________________ Date: ________________",
@@ -485,7 +485,7 @@
         "siblings": [],
         "page": 4,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.410168",
+        "created_at": "2025-09-18T21:09:42.707866",
         "box": {
           "l": 72.108002,
           "t": 378.60438722,
@@ -503,7 +503,7 @@
           "p4-ln-7"
         ]
       },
-      "id": "chunk-15-f1c44d13"
+      "id": "chunk-15-63e6bad7"
     },
     {
       "text": "Image of a university ID card.",
@@ -521,7 +521,7 @@
         "siblings": [],
         "page": 4,
         "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-        "created_at": "2025-09-17T00:03:14.410662",
+        "created_at": "2025-09-18T21:09:42.708351",
         "boxes": [
           {
             "b": 331.59033203125,
@@ -532,12 +532,12 @@
         ],
         "anchored": true
       },
-      "id": "chunk-16-6d263ffd"
+      "id": "chunk-16-64ac7e3c"
     }
   ],
   "document_metadata": {
     "source_file": "GROUP-3-VALIDATION-FORM-1-3.pdf",
-    "processed_date": "2025-09-17T00:03:14.410823",
+    "processed_date": "2025-09-18T21:09:42.708469",
     "total_chunks": 17,
     "processing_version": "1.0",
     "anchored_chunks": 15,
