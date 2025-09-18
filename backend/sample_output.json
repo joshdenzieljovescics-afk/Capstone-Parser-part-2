@@ -221,22 +221,22 @@
       }
     },
     {
-      "text": "PROGRAM: | Bachelors of Science on Information Technology\nDEFENSE DATE: | July 17, 2025\nTITLE: | SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics\nMEMBERS: | 1. Carla, Carlos Miguel M.\n | 2. Chua, Paul Andrew T.\n | 3. Hilario, Lance Joshua J.\n4. Joves, Josh Denziel S.",
-      "metadata": {
-        "type": "table",
-        "section": "Project Details",
-        "context": "Table with project details and members.",
-        "tags": [
-          "project details",
-          "members"
-        ],
-        "row_index": null,
-        "continues": false,
-        "is_page_break": false,
-        "siblings": [],
-        "page": 3
-      }
-    },
+    "text": "<table><tbody><tr><td>PROGRAM:</td><td>Bachelors of Science on Information Technology</td></tr><tr><td>DEFENSE DATE:</td><td>July 17, 2025</td></tr><tr><td>TITLE:</td><td>SafexpressOps: An Agentic AI Platform for Intelligent Workflow Automation and Company-Aware Operational Analytics</td></tr><tr><td>MEMBERS:</td><td>1. Carla, Carlos Miguel M.<br>2. Chua, Paul Andrew T.<br>3. Hilario, Lance Joshua J.<br>4. Joves, Josh Denziel S.</td></tr></tbody></table>",
+    "metadata": {
+      "type": "table",
+      "section": "Project Details",
+      "context": "Table with project details and members.",
+      "tags": [
+        "project details",
+        "members"
+      ],
+      "row_index": null,
+      "continues": false,
+      "is_page_break": false,
+      "siblings": [],
+      "page": 3
+    }
+  },
     {
       "text": "ADVISER: Mr. Sapit, Amado M. III\nThis is to verify that the objectives, scope, and limitations have been approved for Capstone Project development in IT 2621 1 (IT Capstone Project 2).",
       "metadata": {

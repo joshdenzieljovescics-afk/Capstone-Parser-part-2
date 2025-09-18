@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { Document, Page, pdfjs } from 'react-pdf';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import UploadBox from "./UploadBox";
@@ -432,7 +433,7 @@ function App() {
                         <button className="edit-button" onClick={() => handleEdit(chunk.text, index)}>Edit</button>
                       </div>
                     </div>
-                    <ReactMarkdown>{chunk.text}</ReactMarkdown>
+                    <ReactMarkdown rehypePlugins={[rehypeRaw]}>{chunk.text}</ReactMarkdown>
                   </>
                 )}
               </div>
@@ -582,7 +583,7 @@ function App() {
                             )}
                           </div>
 
-                          <ReactMarkdown>{chunk.text || ''}</ReactMarkdown>
+                          <ReactMarkdown rehypePlugins={[rehypeRaw]}>{chunk.text || ''}</ReactMarkdown>
                         </div>
                       ))}
                     </div>
